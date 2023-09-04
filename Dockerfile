@@ -18,13 +18,12 @@ RUN apt-get update && \
         git \
         curl \
         wget \
+        snapd \
         && \
+    snap install go --classic && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Go
-RUN wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz -P ~/ && \
-    rm -rf /usr/local/go && \
-    tar -C /usr/local -xzf ~/go1.21.0.linux-amd64.tar.gz 
+
 ENV PATH="$PATH:/usr/local/go/bin"
 
 
@@ -40,15 +39,15 @@ RUN addgroup --system structs && \
 
 # Setup the scripts
 WORKDIR /src
-RUN chown -R structs /src/structs 
+RUN chown -R structs /src/structs
 #COPY conf/sqitch.conf /src/structs/
 COPY scripts/* /src/structs/
-RUN chmod a+x /src/structs/* 
+RUN chmod a+x /src/structs/*
 
 RUN mkdir /var/structs && \
     mkdir /var/structs/bin && \
-    mkdir /var/structs/chain && \ 
-    mkdir /var/structs/accounts 
+    mkdir /var/structs/chain && \
+    mkdir /var/structs/accounts
 
 ENV PATH="$PATH:/var/structs/bin"
 
