@@ -58,7 +58,7 @@ EXPOSE 1317
 
 
 # Persistence volume
-VOLUME [ "/var/chain" ]
+VOLUME [ "/var/structs" ]
 
 # Run Structs
 CMD [ "/src/structs/start_structsd.sh" ]
