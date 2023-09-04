@@ -11,6 +11,6 @@ do
 	sleep 60
 done
 
-structsd start --home /var/structs/chain --verbose
+structsd start --home /var/structs/chain
 
 
