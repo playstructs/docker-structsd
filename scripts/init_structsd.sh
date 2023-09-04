@@ -4,7 +4,7 @@
 
 # Check for the ready file marker
 # if it exists, don't do it again 
-if [ ! -f /var/chain/ready ]
+if [ ! -f /var/structs/ready ]
 then
 	read -p "What is the network number? " network
 

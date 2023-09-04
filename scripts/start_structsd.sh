@@ -4,8 +4,7 @@
 
 
 # Check for the Ready file
-FILE=/var/chain/ready
-while [ ! -f /var/chain/ready ]
+while [ ! -f /var/structs/ready ]
 do
 	echo "Waiting for chain to the ready..."
 	sleep 60
