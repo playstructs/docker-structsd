@@ -20,9 +20,13 @@ RUN apt-get update && \
         git \
         curl \
         wget \
+        snapd \
+        squashfuse \
+        fuse \
         && \
     rm -rf /var/lib/apt/lists/*
 
+RUN systemctl enable snapd
 RUN snap install go --classic
 
 ENV PATH="$PATH:/usr/local/go/bin"
