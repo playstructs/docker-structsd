@@ -9,7 +9,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
   PGDATABASE=structs \
   PGPORT=5432 \
   PGHOST=localhost \
-  PGUSER=structs 
+  PGUSER=structs
+
+ENV SNAPCRAFT_SETUP_CORE=1
 
 # Install packages
 RUN apt-get update && \
@@ -18,11 +20,9 @@ RUN apt-get update && \
         git \
         curl \
         wget \
-        snapd \
         && \
     rm -rf /var/lib/apt/lists/*
 
-RUN systemctl enable snapd
 RUN snap install go --classic
 
 ENV PATH="$PATH:/usr/local/go/bin"
