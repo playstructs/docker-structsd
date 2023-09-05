@@ -19,28 +19,20 @@ RUN apt-get update && \
         curl \
         wget \
         golang \
-        && \
-    rm -rf /var/lib/apt/lists/*
+        &&  \
 
 
-ARG GOLANG_VERSION=1.21.0
-RUN wget https://dl.google.com/go/go$GOLANG_VERSION.src.tar.gz && tar -C /usr/local -xzf go$GOLANG_VERSION.src.tar.gz
+   # rm -rf /var/lib/apt/lists/*
 
-RUN cd /usr/local/go/src && ./make.bash
 
 ENV PATH=$PATH:/usr/local/go/bin
 
-RUN rm go$GOLANG_VERSION.src.tar.gz
-
-RUN cp /usr/local/go/bin/go /usr/bin/go
-
-RUN go version
 
 
 
 # Install ignite 
-RUN curl https://get.ignite.com/cli! | bash
-RUN ignite plugin add -g github.com/ignite/cli-plugin-network@v0.1.0
+#RUN curl https://get.ignite.com/cli! | bash
+#RUN ignite plugin add -g github.com/ignite/cli-plugin-network@v0.1.0
 
 # Add the user and groups appropriately
 RUN addgroup --system structs && \
