@@ -18,7 +18,7 @@ RUN apt-get update && \
         git \
         curl \
         wget \
-        go \
+        golang \
         && \
     rm -rf /var/lib/apt/lists/*
 
