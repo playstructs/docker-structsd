@@ -18,6 +18,7 @@ RUN apt-get update && \
         git \
         curl \
         wget \
+        go \
         && \
     rm -rf /var/lib/apt/lists/*
 
@@ -30,6 +31,8 @@ RUN cd /usr/local/go/src && ./make.bash
 ENV PATH=$PATH:/usr/local/go/bin
 
 RUN rm go$GOLANG_VERSION.src.tar.gz
+
+RUN apt remove go
 
 RUN go version
 
