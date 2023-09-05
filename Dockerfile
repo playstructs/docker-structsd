@@ -22,10 +22,7 @@ RUN apt-get update && \
         &&  \
     rm -rf /var/lib/apt/lists/*
 
-
 ENV PATH=$PATH:/usr/local/go/bin
-
-
 
 
 # Install ignite 

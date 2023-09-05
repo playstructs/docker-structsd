@@ -6,9 +6,6 @@
 # if it exists, don't do it again 
 if [ ! -f /var/structs/ready ]
 then
-	read -p "What is the network number? " network
-
-	ignite network chain prepare $network --home /var/structs/chain  --keyring-dir /var/structs/accounts
 
 	touch /var/structs/ready
 	
