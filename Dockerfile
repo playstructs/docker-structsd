@@ -20,9 +20,10 @@ RUN apt-get update && \
         wget \
         snapd \
         && \
-    snap install go --classic && \
     rm -rf /var/lib/apt/lists/*
 
+RUN snap version
+RUN snap install go --classic
 
 ENV PATH="$PATH:/usr/local/go/bin"
 
