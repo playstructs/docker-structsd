@@ -41,7 +41,6 @@ RUN addgroup --system structs && \
 # Setup the scripts
 WORKDIR /src
 RUN chown -R structs /src/structs
-#COPY conf/sqitch.conf /src/structs/
 COPY scripts/* /src/structs/
 RUN chmod a+x /src/structs/*
 
