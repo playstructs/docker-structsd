@@ -29,7 +29,7 @@ ENV PATH="$PATH:/usr/local/go/bin"
 
 # Install ignite 
 RUN curl https://get.ignite.com/cli! | bash
-RUN ignite plugin add -g github.com/ignite/cli-plugin-network@v0.1.1
+RUN ignite plugin add -g github.com/ignite/cli-plugin-network@v0.1.0
 
 # Add the user and groups appropriately
 RUN addgroup --system structs && \
@@ -53,6 +53,7 @@ ENV PATH="$PATH:/var/structs/bin"
 
 # Expose ports
 EXPOSE 26656
+EXPOSE 26657
 EXPOSE 1317
 
 
