@@ -1,5 +1,5 @@
 # Base image
-FROM ubuntu:22.04
+FROM ubuntu:23.04
 
 # Information
 LABEL maintainer="Slow Ninja <info@slow.ninja>"
@@ -20,9 +20,7 @@ RUN apt-get update && \
         wget \
         golang \
         &&  \
-
-
-   # rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 
 
 ENV PATH=$PATH:/usr/local/go/bin
@@ -31,8 +29,8 @@ ENV PATH=$PATH:/usr/local/go/bin
 
 
 # Install ignite 
-#RUN curl https://get.ignite.com/cli! | bash
-#RUN ignite plugin add -g github.com/ignite/cli-plugin-network@v0.1.0
+RUN curl https://get.ignite.com/cli! | bash
+RUN ignite plugin add -g github.com/ignite/cli-plugin-network@v0.1.0
 
 # Add the user and groups appropriately
 RUN addgroup --system structs && \
