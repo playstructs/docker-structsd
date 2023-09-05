@@ -32,8 +32,6 @@ ENV PATH=$PATH:/usr/local/go/bin
 
 RUN rm go$GOLANG_VERSION.src.tar.gz
 
-RUN apt-get remove golang -y
-
 RUN cp /usr/local/go/bin/go /usr/bin/go
 
 RUN go version
