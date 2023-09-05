@@ -11,8 +11,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
   PGHOST=localhost \
   PGUSER=structs
 
-ENV SNAPCRAFT_SETUP_CORE=1
-
 # Install packages
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -20,16 +18,28 @@ RUN apt-get update && \
         git \
         curl \
         wget \
-        snapd \
-        squashfuse \
-        fuse \
         && \
     rm -rf /var/lib/apt/lists/*
 
-RUN systemctl enable snapd
-RUN snap install go --classic
 
-ENV PATH="$PATH:/usr/local/go/bin"
+ARG GOLANG_VERSION=1.21.0
+
+#we need the go version installed from apk to bootstrap the custom version built from source
+RUN apk update && apk add go gcc bash musl-dev openssl-dev ca-certificates && update-ca-certificates
+
+RUN wget https://dl.google.com/go/go$GOLANG_VERSION.src.tar.gz && tar -C /usr/local -xzf go$GOLANG_VERSION.src.tar.gz
+
+RUN cd /usr/local/go/src && ./make.bash
+
+ENV PATH=$PATH:/usr/local/go/bin
+
+RUN rm go$GOLANG_VERSION.src.tar.gz
+
+#we delete the apk installed version to avoid conflict
+RUN apk del go
+
+RUN go version
+
 
 
 # Install ignite 
