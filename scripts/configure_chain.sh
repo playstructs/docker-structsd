@@ -13,7 +13,7 @@ then
     echo "Building latest structsd"
     git clone https://github.com/playstructs/structsd.git
     cd structsd
-    ignite build
+    ignite chain build
 
 
     echo "Initializing chain because nothing's there"
