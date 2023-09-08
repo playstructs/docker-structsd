@@ -2,6 +2,12 @@
 
 # launch the Structs blockchain
 
+# Setup Chain
+/src/structs/configure_chain.sh
+
+# Setup Indexer
+/src/structs/configure_indexer.sh
+
 # Check for the Ready file
 while [ ! -f /var/structs/ready ]
 do
