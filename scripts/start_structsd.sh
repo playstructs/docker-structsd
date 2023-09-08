@@ -2,7 +2,7 @@
 
 # launch the Structs blockchain
 
-
+echo $PATH
 # Check for the Ready file
 while [ ! -f /var/structs/ready ]
 do
