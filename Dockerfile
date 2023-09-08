@@ -54,10 +54,10 @@ EXPOSE 1317
 VOLUME [ "/var/structs" ]
 
 # Setup Chain
-CMD [ "/src/structs/configure_chain.sh" ]
+RUN /src/structs/configure_chain.sh
 
 # Setup Indexer
-CMD [ "/src/structs/configure_indexer.sh" ]
+RUN /src/structs/configure_indexer.sh
 
 # Run Structs
 CMD [ "/src/structs/start_structsd.sh" ]
