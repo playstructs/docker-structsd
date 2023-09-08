@@ -18,6 +18,13 @@ then
 
     echo "Initializing chain because nothing's there"
     /root/go/bin/structsd init --home /var/structs/chain
+
+    cd ..
+    git clone --depth 1 --branch $NETWORK_VERSION https://github.com/playstructs/structs-networks.git
+    cp structs-network/genesis.json /var/structs/chain/config/genesis.json
+    cp structs-network/addrbook.json /var/structs/chain/config/addrbook.json
+
+
   fi
 
   echo "Updating config.toml to point to postgres"

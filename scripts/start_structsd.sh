@@ -15,6 +15,6 @@ do
 	sleep 60
 done
 echo "Launching Chain..."
-/root/go/bin/structsd start --home /var/structs/chain
+/root/go/bin/structsd start --home /var/structs/chain --chain-id $NETWORK_CHAIN_ID
 
 
