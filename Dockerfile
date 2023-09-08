@@ -5,11 +5,7 @@ FROM ubuntu:23.04
 LABEL maintainer="Slow Ninja <info@slow.ninja>"
 
 # Variables
-ENV DEBIAN_FRONTEND=noninteractive \
-  PGDATABASE=structs \
-  PGPORT=5432 \
-  PGHOST=localhost \
-  PGUSER=structs
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install packages
 RUN apt-get update && \
@@ -56,6 +52,9 @@ EXPOSE 1317
 
 # Persistence volume
 VOLUME [ "/var/structs" ]
+
+# Setup Indexer
+CMD [ "/src/structs/configure_indexer.sh" ]
 
 # Run Structs
 CMD [ "/src/structs/start_structsd.sh" ]

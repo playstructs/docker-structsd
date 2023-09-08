@@ -19,7 +19,7 @@ docker build .
 
 ## Quickstart
 
-The following will run the latest Structs postgres database server.
+The following will run the latest Structs consensus server.
 
 ```
 docker run -d --rm -p 26656:26656 --name=structsd structs/structsd:latest
