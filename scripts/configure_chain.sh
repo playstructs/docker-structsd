@@ -26,14 +26,14 @@ then
 
     cat /var/structs/chain/config/client.toml
     echo "Updating client.toml"
-    sed -s "s/chain-id.*.$/chain-id = \"$NETWORK_CHAIN_ID\"/" /var/structs/chain/config/client.toml
+    sed -i "s/chain-id.*.$/chain-id = \"$NETWORK_CHAIN_ID\"/" /var/structs/chain/config/client.toml
     cat /var/structs/chain/config/client.toml
   fi
 
   echo "Updating config.toml to point to postgres"
   echo $NODE_INDEXER_PG_CONNECTION
   sed -i 's/indexer = "kv"/indexer = "pg"/' /var/structs/chain/config/config.toml
-  sed -i "s/psql-conn.*.$/psql-conn = \"$NODE_INDEXER_PG_CONNECTION\"/" /var/structs/chain/config/config.toml
+  sed -i 's#psql-conn.*.$#psql-conn = "'$NODE_INDEXER_PG_CONNECTION'"#' /var/structs/chain/config/config.toml
   cat /var/structs/chain/config/config.toml
 
 	touch /var/structs/ready
