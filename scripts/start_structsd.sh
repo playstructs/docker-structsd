@@ -8,7 +8,7 @@ do
 	echo "Waiting for chain to the ready..."
 	sleep 60
 done
-
+echo "Launching Chain..."
 /root/go/bin/structsd start --home /var/structs/chain
 
 
