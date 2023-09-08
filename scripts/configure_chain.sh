@@ -14,8 +14,6 @@ then
     git clone https://github.com/playstructs/structsd.git
     cd structsd
     ignite build
-    cp  /root/go/bin/structsd /usr/bin/structsd
-    echo "Putting genesis into place"
 
 
     echo "Initializing chain because nothing's there"

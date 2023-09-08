@@ -2,7 +2,6 @@
 
 # launch the Structs blockchain
 
-echo $PATH
 # Check for the Ready file
 while [ ! -f /var/structs/ready ]
 do
@@ -10,6 +9,6 @@ do
 	sleep 60
 done
 
-structsd start --home /var/structs/chain
+/root/go/bin/structsd start --home /var/structs/chain
 
 
