@@ -53,6 +53,9 @@ EXPOSE 1317
 # Persistence volume
 VOLUME [ "/var/structs" ]
 
+# Setup Chain
+CMD [ "/src/structs/configure_chain.sh" ]
+
 # Setup Indexer
 CMD [ "/src/structs/configure_indexer.sh" ]
 
