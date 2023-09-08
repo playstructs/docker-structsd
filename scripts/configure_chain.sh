@@ -26,7 +26,7 @@ then
 
     cat /var/structs/chain/config/client.toml
     echo "Updating client.toml"
-    sed -i "s/chain-id.*.$/chain-id = \"$NETWORK_CHAIN_ID\"/" /var/structs/chain/config/client.toml
+    sed -i 's/chain-id.*.$/chain-id = "'$NETWORK_CHAIN_ID'"/' /var/structs/chain/config/client.toml
     cat /var/structs/chain/config/client.toml
   fi
 
