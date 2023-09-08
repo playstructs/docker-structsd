@@ -24,6 +24,7 @@ then
     cp structs-network/genesis.json /var/structs/chain/config/genesis.json
     cp structs-network/addrbook.json /var/structs/chain/config/addrbook.json
 
+    sed -s "s/chain-id.*.$/chain-id = \"$NETWORK_CHAIN_ID\"/" /var/structs/chain/config/client.toml
 
   fi
 
