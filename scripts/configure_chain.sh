@@ -32,7 +32,7 @@ then
 
   echo "Updating config.toml to point to postgres"
   echo $NODE_INDEXER_PG_CONNECTION
-  sed -i 's/indexer = "kv"/indexer = "pg"/' /var/structs/chain/config/config.toml
+  sed -i 's/indexer = "kv"/indexer = "psql"/' /var/structs/chain/config/config.toml
   sed -i 's#psql-conn.*.$#psql-conn = "'$NODE_INDEXER_PG_CONNECTION'"#' /var/structs/chain/config/config.toml
   cat /var/structs/chain/config/config.toml
 
