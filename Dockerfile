@@ -42,6 +42,8 @@ RUN mkdir /var/structs && \
     mkdir /var/structs/chain && \
     mkdir /var/structs/accounts
 
+COPY config/app.toml /var/structs/chain/config/app.toml
+
 ENV PATH="$PATH:/var/structs/bin"
 
 # Expose ports
