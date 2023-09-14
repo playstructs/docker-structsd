@@ -15,7 +15,6 @@ then
     cd structsd
     ignite chain build
 
-
     echo "Initializing chain because nothing's there"
     /root/go/bin/structsd init $MONIKER --home /var/structs/chain
 
@@ -24,17 +23,10 @@ then
     cp structs-networks/genesis.json /var/structs/chain/config/genesis.json
     cp structs-networks/addrbook.json /var/structs/chain/config/addrbook.json
 
-    cat /var/structs/chain/config/client.toml
     echo "Updating client.toml"
     sed -i 's/chain-id.*.$/chain-id = "'$NETWORK_CHAIN_ID'"/' /var/structs/chain/config/client.toml
-    cat /var/structs/chain/config/client.toml
-  fi
 
-  echo "Updating config.toml to point to postgres"
-  echo $NODE_INDEXER_PG_CONNECTION
-  sed -i 's/indexer = "kv"/indexer = "psql"/' /var/structs/chain/config/config.toml
-  sed -i 's#psql-conn.*.$#psql-conn = "'$NODE_INDEXER_PG_CONNECTION'"#' /var/structs/chain/config/config.toml
-  cat /var/structs/chain/config/config.toml
+  fi
 
 	touch /var/structs/ready
 
