@@ -7,9 +7,9 @@ LABEL maintainer="Slow Ninja <info@slow.ninja>"
 # Variables
 ENV DEBIAN_FRONTEND=noninteractive \
       MONIKER="UnknownGuild" \
-      NETWORK_VERSION="73b" \
+      NETWORK_VERSION="74b" \
       NETWORK_TYPE="testnet" \
-      NETWORK_CHAIN_ID="structstestnet-73" \
+      NETWORK_CHAIN_ID="structstestnet-74" \
       NODE_TYPE='NONVALIDATING' \
       NODE_INDEXER="kv" \
       NODE_INDEXER_PG_CONNECTION="" \
