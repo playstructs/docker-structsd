@@ -19,6 +19,8 @@ then
     /root/go/bin/structsd init $MONIKER --home /var/structs/chain
 
     cd ..
+    echo "Cloning network details"
+    echo $NETWORK_VERSION
     git clone --depth 1 --branch $NETWORK_VERSION https://github.com/playstructs/structs-networks.git
     cp structs-networks/genesis.json /var/structs/chain/config/genesis.json
     cp structs-networks/addrbook.json /var/structs/chain/config/addrbook.json

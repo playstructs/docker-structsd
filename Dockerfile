@@ -38,7 +38,6 @@ RUN addgroup --system structs && \
     adduser --system --home /src/structs --shell /bin/bash --group structs
 
 
-
 # Setup the scripts
 WORKDIR /src
 RUN chown -R structs /src/structs
