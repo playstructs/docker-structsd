@@ -31,7 +31,7 @@ ENV PATH=$PATH:/usr/local/go/bin
 
 # Install ignite 
 RUN curl https://get.ignite.com/cli! | bash
-RUN ignite plugin add -g github.com/ignite/cli-plugin-network@v0.2.1
+RUN ignite app install -g github.com/ignite/cli-plugin-network@v0.2.1
 
 # Add the user and groups appropriately
 RUN addgroup --system structs && \
