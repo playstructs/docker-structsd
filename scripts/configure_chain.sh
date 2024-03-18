@@ -16,7 +16,7 @@ then
     ignite chain build
     if [[ $NETWORK_TYPE == "localtestnet" ]];
     then
-      echo "Initializing chain because nothing's there"
+      echo "Initializing local testnet"
       ignite chain init --home /var/structs/chain
     else
       echo "Initializing chain because nothing's there"
