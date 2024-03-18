@@ -1,5 +1,5 @@
 # Base image
-FROM ubuntu:23.04
+FROM ubuntu:23.10
 
 # Information
 LABEL maintainer="Slow Ninja <info@slow.ninja>"
