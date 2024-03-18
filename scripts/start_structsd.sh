@@ -22,7 +22,8 @@ echo "Launching Chain..."
 
 if [[ $NETWORK_TYPE == "localtestnet" ]];
 then
-  ignite chain serve --home /var/structs/chain
+  	sleep 600000000
+  #ignite chain serve --home /var/structs/chain
 else
   /root/go/bin/structsd start --home /var/structs/chain --log_level trace
 fi
