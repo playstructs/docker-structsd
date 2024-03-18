@@ -17,6 +17,7 @@ then
     if [[ $NETWORK_TYPE == "localtestnet" ]];
     then
       echo "Initializing chain because nothing's there"
+      /root/go/bin/ignite chain init --home /var/structs/chain
     else
       echo "Initializing chain because nothing's there"
       /root/go/bin/structsd init $MONIKER --home /var/structs/chain
