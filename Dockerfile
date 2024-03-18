@@ -28,6 +28,10 @@ RUN apt-get update && \
 
 ENV PATH=$PATH:/usr/local/go/bin
 
+# Put this file into place so that the ignite command does not
+# get stuck waiting for input
+RUN mkdir ~/.ignite
+COPY config/anon_identity.json ~/.ignite/anon_identity.json
 
 # Install ignite 
 RUN curl https://get.ignite.com/cli! | bash
