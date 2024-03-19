@@ -17,6 +17,13 @@ do
 	sleep 60
 done
 
+# Check for the Ready file
+while [ ! -f /var/structs/indexing ]
+do
+	echo "Waiting for indexer configuration..."
+	sleep 10
+done
+
 echo "Launching Chain..."
 /root/go/bin/structsd start --home /var/structs/chain --log_level trace
 
