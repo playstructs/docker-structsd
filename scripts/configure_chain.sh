@@ -18,6 +18,8 @@ then
     then
       echo "Initializing local testnet"
       ignite chain init --home /var/structs/chain
+      sleep 45
+
     else
       echo "Initializing chain because nothing's there"
       /root/go/bin/structsd init $MONIKER --home /var/structs/chain
@@ -34,6 +36,10 @@ then
 
     echo "Updating client.toml"
     sed -i 's/chain-id.*.$/chain-id = "'$NETWORK_CHAIN_ID'"/' /var/structs/chain/config/client.toml
+
+    # Setup Indexer
+    /src/structs/configure_indexer.sh
+
 
   fi
 

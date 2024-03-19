@@ -8,8 +8,6 @@ then
     # Setup Chain
     /src/structs/configure_chain.sh
 
-    # Setup Indexer
-    /src/structs/configure_indexer.sh
 fi
 
 # Check for the Ready file
@@ -18,13 +16,7 @@ do
 	echo "Waiting for chain to the ready..."
 	sleep 60
 done
+
 echo "Launching Chain..."
-
-# Takes longer to initialize
-if [[ $NETWORK_TYPE == "localtestnet" ]];
-then
-  sleep 60
-fi
-
 /root/go/bin/structsd start --home /var/structs/chain --log_level trace
 

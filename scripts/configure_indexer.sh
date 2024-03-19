@@ -9,11 +9,6 @@ then
   if [[ $NODE_INDEXER == "psql" ]];
   then
     echo "Configuring Postgresql Indexer"
-    if [ ! -f /var/structs/chain/config/config.toml ]
-    then
-      echo "Initializing chain because nothing's there"
-      /root/go/bin/structsd init --home /var/structs/chain
-    fi
 
     echo "Updating config.toml to point to postgres"
     echo $NODE_INDEXER_PG_CONNECTION
