@@ -18,7 +18,7 @@ then
     then
       echo "Initializing local testnet"
       ignite chain init --home /var/structs/chain
-      sleep 45
+      sleep 30
 
     else
       echo "Initializing chain because nothing's there"
