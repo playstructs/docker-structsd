@@ -35,7 +35,6 @@ COPY config/anon_identity.json /root/.ignite/anon_identity.json
 
 # Install ignite 
 RUN curl https://get.ignite.com/cli! | bash
-RUN ignite app install -g github.com/ignite/cli-plugin-network@v0.2.1
 
 # Add the user and groups appropriately
 RUN addgroup --system structs && \
