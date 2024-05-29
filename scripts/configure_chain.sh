@@ -10,10 +10,6 @@ then
   if [ ! -f /var/structs/chain/config/config.toml ]
   then
 
-    echo "Building latest structsd"
-    git clone https://github.com/playstructs/structsd.git
-    cd structsd
-    ignite chain build
     if [[ $NETWORK_TYPE == "localtestnet" ]];
     then
       echo "Initializing local testnet"
@@ -30,6 +26,9 @@ then
       git clone --depth 1 --branch $NETWORK_VERSION https://github.com/playstructs/structs-networks.git
       cp structs-networks/genesis.json /var/structs/chain/config/genesis.json
       cp structs-networks/addrbook.json /var/structs/chain/config/addrbook.json
+
+      sed i 's#tcp://127.0.0.1:26657#tcp://0.0.0.0:26657#' /var/structs/chain/config/config.toml
+
 
     fi
 

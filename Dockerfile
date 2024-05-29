@@ -65,5 +65,10 @@ EXPOSE 1317
 # Persistence volume
 VOLUME [ "/var/structs" ]
 
+# Building latest structsd
+RUN git clone https://github.com/playstructs/structsd.git && \
+    cd structsd && \
+    ignite chain build
+
 # Run Structs
 CMD [ "/src/structs/start_structsd.sh" ]
