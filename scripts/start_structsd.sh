@@ -11,7 +11,7 @@ then
 fi
 
 # Check for the Ready file
-while [ ! -f /var/structs/chian/ready ]
+while [ ! -f /var/structs/chain/ready ]
 do
 	echo "Waiting for chain to the ready..."
 	sleep 1
