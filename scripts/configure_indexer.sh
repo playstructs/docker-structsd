@@ -5,7 +5,7 @@ echo "Entering the indexer configurator"
 
 # Check for the ready file marker
 # if it exists, don't do it again
-if [ ! -f /var/structs/indexing ]
+if [ ! -f /var/structs/chain/indexing ]
 then
   if [[ $NODE_INDEXER == "psql" ]];
   then
@@ -15,8 +15,9 @@ then
     echo $NODE_INDEXER_PG_CONNECTION
     sed -i 's/indexer = "kv"/indexer = "psql"/' /var/structs/chain/config/config.toml
     sed -i 's#psql-conn.*.$#psql-conn = "'$NODE_INDEXER_PG_CONNECTION'"#' /var/structs/chain/config/config.toml
-
-    touch /var/structs/indexing
   fi
+
+  echo "Indexing is READY"
+  touch /var/structs/chain/indexing
 fi
 

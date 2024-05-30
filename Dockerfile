@@ -63,7 +63,7 @@ EXPOSE 1317
 
 
 # Persistence volume
-VOLUME [ "/var/structs" ]
+# VOLUME [ "/var/structs" ]
 
 # Building latest structsd
 RUN git clone https://github.com/playstructs/structsd.git && \

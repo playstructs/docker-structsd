@@ -11,14 +11,14 @@ then
 fi
 
 # Check for the Ready file
-while [ ! -f /var/structs/ready ]
+while [ ! -f /var/structs/chian/ready ]
 do
 	echo "Waiting for chain to the ready..."
 	sleep 1
 done
 
-# Check for the Ready file
-while [ ! -f /var/structs/indexing ]
+# Check for the Indexer file
+while [ ! -f /var/structs/chain/indexing ]
 do
 	echo "Waiting for indexer configuration..."
 	sleep 1
