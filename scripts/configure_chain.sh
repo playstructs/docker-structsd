@@ -18,7 +18,7 @@ then
 
     else
       echo "Initializing chain because nothing's there"
-      /root/go/bin/structsd init "$MONIKER" --home /var/structs/chain
+      /root/go/bin/structsd init $MONIKER --home /var/structs/chain
 
       cd ..
       echo "Cloning network details"
