@@ -33,8 +33,14 @@ ENV PATH=$PATH:/usr/local/go/bin
 RUN mkdir /root/.ignite
 COPY config/anon_identity.json /root/.ignite/anon_identity.json
 
-# Install ignite 
-RUN curl https://get.ignite.com/cli! | bash
+# Install ignite
+#RUN curl https://get.ignite.com/cli! | bash
+
+RUN curl -L -o ignite.tar.gz https://github.com/ignite/cli/releases/download/v28.8.2/ignite_28.8.2_linux_amd64.tar.gz && \
+    tar -xzvf ignite.tar.gz && \
+    mv ignite ~/go/bin/
+
+
 
 # Add the user and groups appropriately
 RUN addgroup --system structs && \
