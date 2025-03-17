@@ -38,7 +38,7 @@ COPY config/anon_identity.json /root/.ignite/anon_identity.json
 
 RUN curl -L -o ignite.tar.gz https://github.com/ignite/cli/releases/download/v28.8.2/ignite_28.8.2_linux_amd64.tar.gz && \
     tar -xzvf ignite.tar.gz && \
-    mv ignite ~/go/bin/
+    mv ignite /usr/local/bin/
 
 
 
