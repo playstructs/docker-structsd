@@ -4,10 +4,8 @@
 
 # Check for the ready file marker
 # if it exists, don't do it again 
-if [ ! -f /var/structs/ready ]
+if [ ! -f /var/structs/chain/ready ]
 then
-
-	touch /var/structs/ready
-	
+	touch /var/structs/chain/ready
 fi
 

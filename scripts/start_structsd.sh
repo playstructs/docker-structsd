@@ -11,18 +11,18 @@ then
 fi
 
 # Check for the Ready file
-while [ ! -f /var/structs/ready ]
+while [ ! -f /var/structs/chain/ready ]
 do
 	echo "Waiting for chain to the ready..."
-	sleep 10
+	sleep 1
 done
 
-# Check for the Ready file
-while [ ! -f /var/structs/indexing ]
+# Check for the Indexer file
+while [ ! -f /var/structs/chain/indexing ]
 do
 	echo "Waiting for indexer configuration..."
-	sleep 10
+	sleep 1
 done
 
 echo "Launching Chain..."
-/root/go/bin/structsd start --home /var/structs/chain --log_level trace
+/root/go/bin/structsd start --home /var/structs/chain
