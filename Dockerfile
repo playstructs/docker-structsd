@@ -23,6 +23,9 @@ RUN apt-get update && \
         curl \
         wget \
         golang \
+        bc \
+        jq \
+        vim \
         &&  \
     rm -rf /var/lib/apt/lists/*
 
@@ -70,6 +73,7 @@ EXPOSE 1317
 
 # Persistence volume
 # VOLUME [ "/var/structs" ]
+RUN git clone https://github.com/playstructs/structs-guild-toolbox.git
 
 # Building latest structsd
 RUN git clone https://github.com/playstructs/structsd.git && \
