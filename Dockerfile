@@ -78,7 +78,8 @@ RUN git clone https://github.com/playstructs/structs-guild-toolbox.git
 # Building latest structsd
 RUN git clone https://github.com/playstructs/structsd.git && \
     cd structsd && \
-    ignite chain build
+    ignite chain build && \
+    ln -s /root/go/bin/structsd /usr/bin/structsd
 
 # Run Structs
 CMD [ "/src/structs/start_structsd.sh" ]
