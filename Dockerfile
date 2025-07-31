@@ -7,8 +7,12 @@ LABEL maintainer="Slow Ninja <info@slow.ninja>"
 # Variables
 ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTS_PATH="~/.structs" \
+    STRUCTS_REACTOR_SHARE="~/reactor_share" \
+    STRUCTS_REACTOR_BACKUP="~/reactor_backup" \
     STRUCTS_CHAIN_ID="structstestnet-102" \
-    STRUCTS_NETWORK_VERSION="102b"
+    STRUCTS_NETWORK_VERSION="102b" \
+    STRUCTS_MONIKER="UnknownGuild" \
+    STRUCTSD_HOST="structsd"
 
 # Install packages
 RUN apt-get update && \
@@ -46,6 +50,7 @@ RUN git clone https://github.com/playstructs/structsd.git && \
     cp /root/go/bin/structsd /usr/bin/structsd
 
 RUN mkdir $STRUCTS_PATH && \
+    mkdir $STRUCTS_REACTOR_SHARE && \
     mkdir ~/scripts && \
     mkdir ~/config
 
