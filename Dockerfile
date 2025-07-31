@@ -5,7 +5,10 @@ FROM ubuntu:24.04
 LABEL maintainer="Slow Ninja <info@slow.ninja>"
 
 # Variables
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive \
+    STRUCTS_PATH="~/.structs" \
+    STRUCTS_CHAIN_ID="structstestnet-102" \
+    STRUCTS_NETWORK_VERSION="102b"
 
 # Install packages
 RUN apt-get update && \
@@ -21,8 +24,6 @@ RUN apt-get update && \
         &&  \
     rm -rf /var/lib/apt/lists/*
 
-ENV PATH=$PATH:/usr/local/go/bin
-
 # Put this file into place so that the ignite command does not
 # get stuck waiting for input
 RUN mkdir /root/.ignite
@@ -31,7 +32,7 @@ COPY config/anon_identity.json /root/.ignite/anon_identity.json
 # Install ignite
 RUN curl -L -o ignite.tar.gz https://github.com/ignite/cli/releases/download/v28.8.2/ignite_28.8.2_linux_amd64.tar.gz && \
     tar -xzvf ignite.tar.gz && \
-    mv ignite /usr/local/bin/
+    mv ignite /usr/bin/
 
 # Expose ports
 EXPOSE 26656
@@ -44,5 +45,14 @@ RUN git clone https://github.com/playstructs/structsd.git && \
     ignite chain build && \
     cp /root/go/bin/structsd /usr/bin/structsd
 
+RUN mkdir $STRUCTS_PATH && \
+    mkdir ~/scripts && \
+    mkdir ~/config
+
+COPY scripts/* ~/scripts/
+RUN chmod a+x ~/scripts/*
+
+COPY config/* ~/config/
+
 # Run Structs
-CMD [ "structsd start" ]
+CMD [ "structsd", "start" ]
