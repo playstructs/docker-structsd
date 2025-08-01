@@ -39,7 +39,6 @@ else
     STRUCTS_GUILD_ADMIN_ADDRESS=$(structsd keys show guild_admin -a )
 
     echo "Confirming wallet has enough funds ${STRUCTS_GUILD_ADMIN_ADDRESS}"
-    TODO FIX
     STRUCTS_GUILD_ADMIN_BALANCE=$(structsd query bank balance $STRUCTS_GUILD_ADMIN_ADDRESS ualpha | jq -r .balance.amount)
     if [ "$STRUCTS_GUILD_ADMIN_BALANCE" -lt "$STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT" ]; then
       echo "The Mnemonic provided ${STRUCTS_GUILD_ADMIN_ADDRESS} does not have a large enough balance for the initial staking (${STRUCTS_GUILD_ADMIN_BALANCE}ualpha < ${STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT}ualpha)"
