@@ -11,8 +11,6 @@ if [ "$STRUCTS_PREVIOUS_CHAIN_ID" != "$STRUCTS_CHAIN_ID" ]; then
   exit 1
 else
 
-
-
   cp ~/config/client/client.toml $STRUCTS_PATH/config/
 
   echo "Updating client.toml with the correct Chain ID"
