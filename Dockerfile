@@ -12,7 +12,18 @@ ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTS_CHAIN_ID="structstestnet-102" \
     STRUCTS_NETWORK_VERSION="102b" \
     STRUCTS_MONIKER="UnknownGuild" \
-    STRUCTSD_HOST="structsd"
+    STRUCTSD_HOST="structsd" \
+    STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT="50000000" \
+    STRUCTS_VALIDATOR_IDENTITY="UnknownDroid" \
+    STRUCTS_GUILD_WEBSITE="https://playstructs.com" \
+    STRUCTS_GUILD_CONTACT="UnknownDroidLeader" \
+    STRUCTS_VALIDATOR_COMMISSION_RATE="0.1" \
+    STRUCTS_VALIDATOR_MAX_RATE="0.2" \
+    STRUCTS_VALIDATOR_MAX_CHANGE_RATE="0.01" \
+    STRUCTS_VALIDATOR_MIN_SELF_DELEGATION="1"
+
+
+
 
 # Install packages
 RUN apt-get update && \

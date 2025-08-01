@@ -1,0 +1,13 @@
+{
+  "pubkey": VALIDATOR_PUB_KEY_DETAILS,
+  "amount": "VALIDATOR_INITIAL_STAKING_AMOUNT",
+  "moniker": "VALIDATOR_MONIKER",
+  "identity": "VALIDATOR_IDENTITY",
+  "website": "VALIDATOR_WEBSITE",
+  "security": "VALIDATOR_SECURITY_CONTACT",
+  "details": "VALIDATOR_DESCRIPTION",
+  "commission-rate": "VALIDATOR_COMMISSION_RATE",
+  "commission-max-rate": "VALIDATOR_MAX_RATE",
+  "commission-max-change-rate": "VALIDATOR_MAX_CHANGE_RATE",
+  "min-self-delegation": "VALIDATOR_MIN_SELF_DELEGATION"
+}
