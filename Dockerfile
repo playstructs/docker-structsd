@@ -23,9 +23,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTS_VALIDATOR_MIN_SELF_DELEGATION="1" \
     STRUCTS_INDEXER_PG_CONNECTION=""
 
-
-
-
 # Install packages
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -37,6 +34,7 @@ RUN apt-get update && \
         bc \
         jq \
         vim \
+        postgresql-client \
         &&  \
     rm -rf /var/lib/apt/lists/*
 
