@@ -5,7 +5,7 @@ echo "Checking Chain Configuration"
 if [[ ! -d $STRUCTS_PATH/config ]]; then
     echo "No config found, setting defaults"
     mkdir -p $STRUCTS_PATH/config
-    cp ~/config/default/* $STRUCTS_PATH/config/
+    cp /root/config/default/* $STRUCTS_PATH/config/
 fi
 
 mkdir -p $STRUCTS_PATH/status

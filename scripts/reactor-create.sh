@@ -11,7 +11,7 @@ if [ "$STRUCTS_PREVIOUS_CHAIN_ID" != "$STRUCTS_CHAIN_ID" ]; then
   exit 1
 else
 
-  cp ~/config/client/client.toml $STRUCTS_PATH/config/
+  cp /root/config/client/client.toml $STRUCTS_PATH/config/
 
   echo "Updating client.toml with the correct Chain ID"
   sed -i 's/chain-id.*.$/chain-id = "'$STRUCTS_CHAIN_ID'"/' $STRUCTS_PATH/config/client.toml
@@ -46,7 +46,7 @@ else
     fi
 
     echo "Preparing the reactor.json file"
-    cp ~/config/reactor-create/reactor.template.json $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
+    cp /root/config/reactor-create/reactor.template.json $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
     cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_PUB_KEY_DETAILS#${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
     cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_INITIAL_STAKING_AMOUNT#${STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT}ualpha#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
     cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_MONIKER#${STRUCTS_MONIKER}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json

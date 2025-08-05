@@ -44,7 +44,7 @@ esac
 # TODO Deploy a testnet specific schema?
 
 echo "Moving Indexer specific configuration files into place"
-cp ~/config/indexer/* $STRUCTS_PATH/config/
+cp /root/config/indexer/* $STRUCTS_PATH/config/
 
 echo "Updating config.toml to point to postgres"
 echo $STRUCTS_INDEXER_PG_CONNECTION
