@@ -22,7 +22,7 @@ else
   STRUCTS_NODE_STATUS=$(structsd status | jq -r ".sync_info.catching_up")
   while $STRUCTS_NODE_STATUS; do
     echo "Node is not ready, still syncing"
-    sleep 60
+    sleep 2
     STRUCTS_NODE_STATUS=$(structsd status | jq -r ".sync_info.catching_up")
   done
 
