@@ -6,7 +6,7 @@ LABEL maintainer="Slow Ninja <info@slow.ninja>"
 
 # Variables
 ENV DEBIAN_FRONTEND=noninteractive \
-    STRUCTS_PATH="~/.structs" \
+    STRUCTS_PATH="/root/.structs" \
     STRUCTS_REACTOR_SHARE="~/reactor_share" \
     STRUCTS_REACTOR_BACKUP="~/reactor_backup" \
     STRUCTS_CHAIN_ID="structstestnet-102" \
@@ -61,13 +61,13 @@ RUN git clone https://github.com/playstructs/structsd.git && \
 
 RUN mkdir $STRUCTS_PATH && \
     mkdir $STRUCTS_REACTOR_SHARE && \
-    mkdir ~/scripts && \
-    mkdir ~/config
+    mkdir /root/scripts && \
+    mkdir /root/config
 
-COPY scripts/* ~/scripts/
-RUN chmod a+x ~/scripts/*
+COPY scripts/* /root/scripts/
+RUN chmod a+x /root/scripts/*
 
-COPY config/* ~/config/
+COPY config/* /root/config/
 
 # Run Structs
 CMD [ "structsd", "start" ]
