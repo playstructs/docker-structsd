@@ -7,8 +7,8 @@ LABEL maintainer="Slow Ninja <info@slow.ninja>"
 # Variables
 ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTS_PATH="/root/.structs" \
-    STRUCTS_REACTOR_SHARE="~/reactor_share" \
-    STRUCTS_REACTOR_BACKUP="~/reactor_backup" \
+    STRUCTS_REACTOR_SHARE="/root/reactor_share" \
+    STRUCTS_REACTOR_BACKUP="/root/reactor_backup" \
     STRUCTS_CHAIN_ID="structstestnet-102" \
     STRUCTS_NETWORK_VERSION="102b" \
     STRUCTS_MONIKER="UnknownGuild" \
