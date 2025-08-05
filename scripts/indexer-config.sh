@@ -14,7 +14,7 @@ cp /root/config/indexer/* $STRUCTS_PATH/config/
 
 echo "Updating config.toml to point to postgres"
 echo $STRUCTS_INDEXER_PG_CONNECTION
-sed -i 's#psql-conn.*.$#psql-conn = "'$STRUCTS_INDEXER_PG_CONNECTION'"#' /var/structs/chain/config/config.toml
+sed -i 's#psql-conn.*.$#psql-conn = "'$STRUCTS_INDEXER_PG_CONNECTION'"#' $STRUCTS_PATH/config/config.toml
 
 echo "Node successfully configured for indexing"
 
