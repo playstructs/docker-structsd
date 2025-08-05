@@ -15,8 +15,12 @@ else
     exit 1
   else
 
+    mv /root/.structs/config/genesis.json /root/genesis.json.tmp
+
     echo "Initialing the Reactor Files"
     structsd init "$STRUCTS_MONIKER"
+
+    mv /root/genesis.json.tmp /root/.structs/config/genesis.json
 
     echo "Updating config.toml to accept outside connections"
     sed -i 's#tcp://127.0.0.1:26657#tcp://0.0.0.0:26657#' $STRUCTS_PATH/config/config.toml
