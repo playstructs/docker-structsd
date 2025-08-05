@@ -14,8 +14,8 @@ fi
 #   1 if the server is rejecting connections (for example during startup),
 #   2 if there was no response to the connection attempt, and
 #   3 if no attempt was made (for example due to invalid parameters).
-POSTGRES_STATUS=$(pg_isready -q -d $STRUCTS_INDEXER_PG_CONNECTION | echo $?)
-case "$POSTGRES_STATUS" in
+pg_isready -q -d $STRUCTS_INDEXER_PG_CONNECTION
+case "$?" in
   0)
     echo "Connecting to Postgres was mostly successful"
     ;;
