@@ -64,10 +64,10 @@ RUN mkdir $STRUCTS_PATH && \
     mkdir /root/scripts && \
     mkdir /root/config
 
-COPY scripts/* /root/scripts/
+COPY scripts/ /root/scripts/
 RUN chmod a+x /root/scripts/*
 
-COPY config/* /root/config/
+COPY config/ /root/config/
 
 # Run Structs
 CMD [ "structsd", "start" ]
