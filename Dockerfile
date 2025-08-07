@@ -57,6 +57,7 @@ RUN git clone https://github.com/playstructs/structsd.git && \
 
 RUN mkdir $STRUCTS_PATH && \
     mkdir $STRUCTS_REACTOR_SHARE && \
+    mkdir $STRUCTS_REACTOR_BACKUP && \
     mkdir /root/scripts && \
     mkdir /root/config
 

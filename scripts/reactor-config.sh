@@ -28,7 +28,7 @@ else
     structsd comet show-validator > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor_pub_key.json
     structsd comet show-address > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor_address
 
-    cp $STRUCTS_PATH/config/priv_validator_key.json $STRUCTS_REACTOR_BACKUP/
+    cp $STRUCTS_PATH/config/priv_validator_key.json $STRUCTS_REACTOR_BACKUP/priv_validator_key.json
 
     touch $STRUCTS_PATH/status/reactor
 

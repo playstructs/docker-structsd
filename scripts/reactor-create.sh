@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-if ! [ -f $STRUCTS_REACTOR_PUBLIC_SHARE/reactor_pub_key.json ]; then
+ls -la $STRUCTS_REACTOR_SHARE
+
+if ! [ -f $STRUCTS_REACTOR_SHARE/reactor_pub_key.json ]; then
   echo "Reactor needs to be initialized"
   exit 1
 fi
@@ -20,10 +22,10 @@ while $STRUCTS_NODE_STATUS; do
   STRUCTS_NODE_STATUS=$(structsd status | jq -r ".sync_info.catching_up")
 done
 
-STRUCTS_VALIDATOR_ADDRESS=$(cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor_address)
+STRUCTS_VALIDATOR_ADDRESS=$(cat $STRUCTS_REACTOR_SHARE/reactor_address)
 STRUCTS_VALIDATOR_COUNT=$(structsd query staking validator $STRUCTS_VALIDATOR_ADDRESS 2>/dev/null | jq length | awk 'NF || $0 == "" { print ($0 == "" ? 0 : $0) } END { if (NR == 0) print 0 }')
 
-STRUCTS_VALIDATOR_PUB_KEY_DETAILS=$(cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor_pub_key.json)
+STRUCTS_VALIDATOR_PUB_KEY_DETAILS=$(cat $STRUCTS_REACTOR_SHARE/reactor_pub_key.json)
 
 if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   echo "The Reactor is not found onchain, creating..."
@@ -40,22 +42,22 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   fi
 
   echo "Preparing the reactor.json file"
-  cp /root/config/reactor-create/reactor.template.json $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_PUB_KEY_DETAILS#${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_INITIAL_STAKING_AMOUNT#${STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT}ualpha#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_MONIKER#${STRUCTS_MONIKER}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_IDENTITY#${STRUCTS_VALIDATOR_IDENTITY}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_WEBSITE#${STRUCTS_GUILD_WEBSITE}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_SECURITY_CONTACT#${STRUCTS_GUILD_CONTACT}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
+  cp /root/config/reactor-create/reactor.template.json $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_PUB_KEY_DETAILS#${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_INITIAL_STAKING_AMOUNT#${STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT}ualpha#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_MONIKER#${STRUCTS_MONIKER}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_IDENTITY#${STRUCTS_VALIDATOR_IDENTITY}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_WEBSITE#${STRUCTS_GUILD_WEBSITE}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_SECURITY_CONTACT#${STRUCTS_GUILD_CONTACT}#" > $STRUCTS_REACTOR_SHARE/reactor.json
   # Description is used later, should not be set to anything special at this stage.
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_DESCRIPTION##" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_COMMISSION_RATE#${STRUCTS_VALIDATOR_COMMISSION_RATE}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_MAX_RATE#${STRUCTS_VALIDATOR_MAX_RATE}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_MAX_CHANGE_RATE#${STRUCTS_VALIDATOR_MAX_CHANGE_RATE}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
-  cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json | sed "s#VALIDATOR_MIN_SELF_DELEGATION#${STRUCTS_VALIDATOR_MIN_SELF_DELEGATION}#" > $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_DESCRIPTION##" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_COMMISSION_RATE#${STRUCTS_VALIDATOR_COMMISSION_RATE}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_MAX_RATE#${STRUCTS_VALIDATOR_MAX_RATE}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_MAX_CHANGE_RATE#${STRUCTS_VALIDATOR_MAX_CHANGE_RATE}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_MIN_SELF_DELEGATION#${STRUCTS_VALIDATOR_MIN_SELF_DELEGATION}#" > $STRUCTS_REACTOR_SHARE/reactor.json
 
   echo "Reactor Creation transaction"
-  structsd tx staking create-validator $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json --from guild_admin --gas auto
+  structsd tx staking create-validator $STRUCTS_REACTOR_SHARE/reactor.json --from guild_admin --gas auto
 
   sleep 10
   echo "Checking for confirmation..."
@@ -63,7 +65,7 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   STRUCTS_VALIDATOR_COUNT=$(structsd query staking validator $STRUCTS_VALIDATOR_ADDRESS 2>/dev/null | jq length | awk 'NF || $0 == "" { print ($0 == "" ? 0 : $0) } END { if (NR == 0) print 0 }')
   if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
     echo "Validator creation seems to have failed"
-    cat $STRUCTS_REACTOR_PUBLIC_SHARE/reactor.json
+    cat $STRUCTS_REACTOR_SHARE/reactor.json
     exit 1
   fi
 
