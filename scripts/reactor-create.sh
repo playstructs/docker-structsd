@@ -41,8 +41,12 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   fi
 
   echo "Preparing the reactor.json file"
-  cp /root/config/reactor-create/reactor.template.json $STRUCTS_REACTOR_SHARE/reactor.json
-STRUCTS_REACTOR_SHARE
+  cat /root/config/reactor-create/reactor.template.json > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
+
   echo "Pub Key Details: ${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_PUB_KEY_DETAILS#${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}#" > $STRUCTS_REACTOR_SHARE/reactor.json
   echo "####### reactor.json ############"
