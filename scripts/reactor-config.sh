@@ -12,6 +12,8 @@ else
   STRUCTS_PREVIOUS_CHAIN_ID=$(cat $STRUCTS_PATH/status/network)
   if [ "$STRUCTS_PREVIOUS_CHAIN_ID" != "$STRUCTS_CHAIN_ID" ]; then
     echo "Network needs to be configured first"
+    echo "Current Chain: ${STRUCTS_CHAIN_ID}"
+    echo "Previous Chain: ${STRUCTS_PREVIOUS_CHAIN_ID}"
     exit 1
   else
 
@@ -34,5 +36,7 @@ else
 
   fi
 fi
+
+echo "Reactor Configuration Process Completed Successfully"
 
 exit 0
