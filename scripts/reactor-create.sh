@@ -7,18 +7,19 @@ if ! [ -f $STRUCTS_REACTOR_SHARE/reactor_pub_key.json ]; then
   exit 1
 fi
 
+mkdir $STRUCTS_PATH/config
 cp /root/config/client/client.toml $STRUCTS_PATH/config/
 
 echo "Updating client.toml with the correct Chain ID"
 sed -i 's/chain-id.*.$/chain-id = "'$STRUCTS_CHAIN_ID'"/' $STRUCTS_PATH/config/client.toml
 
 echo "Updating client.toml with the correct host"
-sed -i 's/node = "tcp://localhost:26657"$/node = "tcp://'$STRUCTSD_HOST':26657"/' $STRUCTS_PATH/config/client.toml
+sed -i 's#node = "tcp://localhost:26657"$#node = "tcp://'$STRUCTSD_HOST':26657"#' $STRUCTS_PATH/config/client.toml
 
 STRUCTS_NODE_STATUS=$(structsd status | jq -r ".sync_info.catching_up")
 while $STRUCTS_NODE_STATUS; do
   echo "Node is not ready, still syncing"
-  sleep 2
+  sleep 30
   STRUCTS_NODE_STATUS=$(structsd status | jq -r ".sync_info.catching_up")
 done
 
