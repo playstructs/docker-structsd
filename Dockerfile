@@ -67,4 +67,4 @@ RUN chmod a+x /root/scripts/*
 COPY config/ /root/config/
 
 # Run Structs
-CMD [ "structsd", "start" ]
+CMD [ "bash", "/root/scripts/start.sh" ]
