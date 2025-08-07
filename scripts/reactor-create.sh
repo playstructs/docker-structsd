@@ -24,7 +24,7 @@ while $STRUCTS_NODE_STATUS; do
 done
 
 STRUCTS_VALIDATOR_ADDRESS=$(cat $STRUCTS_REACTOR_SHARE/reactor_address)
-STRUCTS_VALIDATOR_COUNT=$(structsd query staking validator $STRUCTS_VALIDATOR_ADDRESS 2>/dev/null | jq length | awk 'NF || $0 == "" { print ($0 == "" ? 0 : $0) } END { if (NR == 0) print 0 }')
+STRUCTS_VALIDATOR_COUNT=$(structsd query staking validator $STRUCTS_VALIDATOR_ADDRESS --output json 2>/dev/null | jq length | awk 'NF || $0 == "" { print ($0 == "" ? 0 : $0) } END { if (NR == 0) print 0 }')
 
 STRUCTS_VALIDATOR_PUB_KEY_DETAILS=$(cat $STRUCTS_REACTOR_SHARE/reactor_pub_key.json)
 
@@ -36,7 +36,7 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   STRUCTS_GUILD_ADMIN_ADDRESS=$(structsd keys show guild_admin -a )
 
   echo "Confirming wallet has enough funds ${STRUCTS_GUILD_ADMIN_ADDRESS}"
-  STRUCTS_GUILD_ADMIN_BALANCE=$(structsd query bank balance $STRUCTS_GUILD_ADMIN_ADDRESS ualpha | jq -r .balance.amount)
+  STRUCTS_GUILD_ADMIN_BALANCE=$(structsd query bank balance $STRUCTS_GUILD_ADMIN_ADDRESS ualpha --output json | jq -r .balance.amount)
   if [ "$STRUCTS_GUILD_ADMIN_BALANCE" -lt "$STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT" ]; then
     echo "The Mnemonic provided ${STRUCTS_GUILD_ADMIN_ADDRESS} does not have a large enough balance for the initial staking (${STRUCTS_GUILD_ADMIN_BALANCE}ualpha < ${STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT}ualpha)"
     exit 1
@@ -63,7 +63,7 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   sleep 10
   echo "Checking for confirmation..."
 
-  STRUCTS_VALIDATOR_COUNT=$(structsd query staking validator $STRUCTS_VALIDATOR_ADDRESS 2>/dev/null | jq length | awk 'NF || $0 == "" { print ($0 == "" ? 0 : $0) } END { if (NR == 0) print 0 }')
+  STRUCTS_VALIDATOR_COUNT=$(structsd query staking validator $STRUCTS_VALIDATOR_ADDRESS --output json 2>/dev/null | jq length | awk 'NF || $0 == "" { print ($0 == "" ? 0 : $0) } END { if (NR == 0) print 0 }')
   if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
     echo "Validator creation seems to have failed"
     cat $STRUCTS_REACTOR_SHARE/reactor.json
