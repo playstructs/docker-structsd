@@ -42,30 +42,74 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
 
   echo "Preparing the reactor.json file"
   cp /root/config/reactor-create/reactor.template.json $STRUCTS_REACTOR_SHARE/reactor.json
-
+STRUCTS_REACTOR_SHARE
   echo "Pub Key Details: ${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_PUB_KEY_DETAILS#${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Initial Staking Amount: ${STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT}ualpha"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_INITIAL_STAKING_AMOUNT#${STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT}ualpha#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Moniker: ${STRUCTS_MONIKER}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_MONIKER#${STRUCTS_MONIKER}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Identity: ${STRUCTS_VALIDATOR_IDENTITY}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_IDENTITY#${STRUCTS_VALIDATOR_IDENTITY}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Website: ${STRUCTS_GUILD_WEBSITE}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_WEBSITE#${STRUCTS_GUILD_WEBSITE}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Security Contact: ${STRUCTS_GUILD_CONTACT}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_SECURITY_CONTACT#${STRUCTS_GUILD_CONTACT}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   # Description is used later, should not be set to anything special at this stage.
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_DESCRIPTION##" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Commission Rate: ${STRUCTS_VALIDATOR_COMMISSION_RATE}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_COMMISSION_RATE#${STRUCTS_VALIDATOR_COMMISSION_RATE}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Max Rate: ${STRUCTS_VALIDATOR_MAX_RATE}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_MAX_RATE#${STRUCTS_VALIDATOR_MAX_RATE}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Max Change Rate: ${STRUCTS_VALIDATOR_MAX_CHANGE_RATE}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_MAX_CHANGE_RATE#${STRUCTS_VALIDATOR_MAX_CHANGE_RATE}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+
   echo "Min Self Delegation: ${STRUCTS_VALIDATOR_MIN_SELF_DELEGATION}"
   cat $STRUCTS_REACTOR_SHARE/reactor.json | sed "s#VALIDATOR_MIN_SELF_DELEGATION#${STRUCTS_VALIDATOR_MIN_SELF_DELEGATION}#" > $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
+  cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo "####### reactor.json ############"
 
+  echo "Final reactor.json"
   echo "####### reactor.json ############"
   cat $STRUCTS_REACTOR_SHARE/reactor.json
   echo "####### reactor.json ############"
