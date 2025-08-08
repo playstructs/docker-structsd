@@ -16,24 +16,26 @@ else
     echo "Previous Chain: ${STRUCTS_PREVIOUS_CHAIN_ID}"
     exit 1
   else
+    if [ -f $STRUCTS_REACTOR_BACKUP/priv_validator_key.json ]; then
+      echo "Reactor already configured 😎"
+    else
+      mv /root/.structs/config/genesis.json /root/genesis.json.tmp
 
-    mv /root/.structs/config/genesis.json /root/genesis.json.tmp
+      echo "Initialing the Reactor Files"
+      structsd init "$STRUCTS_MONIKER"
 
-    echo "Initialing the Reactor Files"
-    structsd init "$STRUCTS_MONIKER"
+      mv /root/genesis.json.tmp /root/.structs/config/genesis.json
 
-    mv /root/genesis.json.tmp /root/.structs/config/genesis.json
+      structsd comet show-validator > $STRUCTS_REACTOR_SHARE/reactor_pub_key.json
+      structsd comet show-address > $STRUCTS_REACTOR_SHARE/reactor_address
+
+      cp $STRUCTS_PATH/config/priv_validator_key.json $STRUCTS_REACTOR_BACKUP/priv_validator_key.json
+    fi
 
     echo "Updating config.toml to accept outside connections"
     sed -i 's#tcp://127.0.0.1:26657#tcp://0.0.0.0:26657#' $STRUCTS_PATH/config/config.toml
 
-    structsd comet show-validator > $STRUCTS_REACTOR_SHARE/reactor_pub_key.json
-    structsd comet show-address > $STRUCTS_REACTOR_SHARE/reactor_address
-
-    cp $STRUCTS_PATH/config/priv_validator_key.json $STRUCTS_REACTOR_BACKUP/priv_validator_key.json
-
     touch $STRUCTS_PATH/status/reactor
-
   fi
 fi
 
