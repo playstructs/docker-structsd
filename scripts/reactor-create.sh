@@ -85,7 +85,7 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   echo "####### reactor.json ############"
 
   echo "Reactor Creation transaction"
-  structsd tx staking create-validator "${STRUCTS_REACTOR_SHARE}/reactor.json" --from guild_admin --gas auto
+  structsd tx staking create-validator "${STRUCTS_REACTOR_SHARE}/reactor.json" --from guild_admin --gas auto --yes
 
   sleep 10
   echo "Checking for confirmation..."
