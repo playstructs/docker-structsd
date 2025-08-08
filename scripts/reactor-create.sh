@@ -23,7 +23,6 @@ done
 
 STRUCTS_VALIDATOR_PUB_KEY_DETAILS=$(cat $STRUCTS_REACTOR_SHARE/reactor_pub_key.json)
 STRUCTS_VALIDATOR_PUB_KEY=$(echo "${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}" | jq -r ".key")
-STRUCTS_VALIDATOR_ADDRESS=$(cat $STRUCTS_REACTOR_SHARE/reactor_address)
 STRUCTS_VALIDATOR_COUNT=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == \"${STRUCTS_VALIDATOR_PUB_KEY}\")]" | jq length )
 
 echo "Validator Pub Key: ${STRUCTS_VALIDATOR_PUB_KEY}"
@@ -99,8 +98,14 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
     exit 1
   fi
 
+  STRUCTS_VALIDATOR_ADDRESS=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == \"${STRUCTS_VALIDATOR_PUB_KEY}\")]" | jq -r '.[].operator_address')
+  echo "${STRUCTS_VALIDATOR_ADDRESS}" > $STRUCTS_REACTOR_SHARE/reactor_address
+  echo "Validator Created as ${STRUCTS_VALIDATOR_ADDRESS}"
+
 else
-  echo "Reactor is already onchain"
+  STRUCTS_VALIDATOR_ADDRESS=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == \"${STRUCTS_VALIDATOR_PUB_KEY}\")]" | jq -r '.[].operator_address')
+  echo "${STRUCTS_VALIDATOR_ADDRESS}" > $STRUCTS_REACTOR_SHARE/reactor_address
+  echo "Reactor is already onchain as ${STRUCTS_VALIDATOR_ADDRESS}"
 fi
 
 exit 0

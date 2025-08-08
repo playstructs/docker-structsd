@@ -27,7 +27,6 @@ else
       mv /root/genesis.json.tmp /root/.structs/config/genesis.json
 
       structsd comet show-validator > $STRUCTS_REACTOR_SHARE/reactor_pub_key.json
-      structsd comet show-address > $STRUCTS_REACTOR_SHARE/reactor_address
 
       cp $STRUCTS_PATH/config/priv_validator_key.json $STRUCTS_REACTOR_BACKUP/priv_validator_key.json
     fi
