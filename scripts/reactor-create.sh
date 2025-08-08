@@ -21,10 +21,14 @@ while $STRUCTS_NODE_STATUS; do
   STRUCTS_NODE_STATUS=$(structsd status | jq -r ".sync_info.catching_up")
 done
 
-STRUCTS_VALIDATOR_ADDRESS=$(cat $STRUCTS_REACTOR_SHARE/reactor_address)
-STRUCTS_VALIDATOR_COUNT=$(structsd query staking validator $STRUCTS_VALIDATOR_ADDRESS --output json 2>/dev/null | jq length | awk 'NF || $0 == "" { print ($0 == "" ? 0 : $0) } END { if (NR == 0) print 0 }')
-
 STRUCTS_VALIDATOR_PUB_KEY_DETAILS=$(cat $STRUCTS_REACTOR_SHARE/reactor_pub_key.json)
+STRUCTS_VALIDATOR_PUB_KEY=$(echo "${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}" | jq -r ".key")
+STRUCTS_VALIDATOR_ADDRESS=$(cat $STRUCTS_REACTOR_SHARE/reactor_address)
+STRUCTS_VALIDATOR_COUNT=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == '${STRUCTS_VALIDATOR_PUB_KEY}')]" | jq length )
+
+echo "Validator Pub Key: ${STRUCTS_VALIDATOR_PUB_KEY}"
+echo "Validator Consensus Address: ${STRUCTS_VALIDATOR_ADDRESS}"
+echo "Validator Count: ${STRUCTS_VALIDATOR_COUNT}"
 
 if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   echo "The Reactor is not found onchain, creating..."
@@ -42,9 +46,6 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
 
   echo "Preparing the reactor.json file"
   cat /root/config/reactor-create/reactor.template.json > $STRUCTS_REACTOR_SHARE/reactor.json
-  echo "####### reactor.json ############"
-  cat $STRUCTS_REACTOR_SHARE/reactor.json
-  echo "####### reactor.json ############"
 
 
   echo "Pub Key Details: ${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}"
@@ -82,6 +83,7 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   echo "Final reactor.json"
   echo "####### reactor.json ############"
   cat $STRUCTS_REACTOR_SHARE/reactor.json
+  echo ""
   echo "####### reactor.json ############"
 
   echo "Reactor Creation transaction"
@@ -90,7 +92,7 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   sleep 10
   echo "Checking for confirmation..."
 
-  STRUCTS_VALIDATOR_COUNT=$(structsd query staking validator $STRUCTS_VALIDATOR_ADDRESS --output json 2>/dev/null | jq length | awk 'NF || $0 == "" { print ($0 == "" ? 0 : $0) } END { if (NR == 0) print 0 }')
+  STRUCTS_VALIDATOR_COUNT=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == '${STRUCTS_VALIDATOR_PUB_KEY}')]" | jq length )
   if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
     echo "Validator creation seems to have failed"
     cat $STRUCTS_REACTOR_SHARE/reactor.json
