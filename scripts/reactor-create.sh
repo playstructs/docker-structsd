@@ -26,7 +26,6 @@ STRUCTS_VALIDATOR_PUB_KEY=$(echo "${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}" | jq -r 
 STRUCTS_VALIDATOR_COUNT=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == \"${STRUCTS_VALIDATOR_PUB_KEY}\")]" | jq length )
 
 echo "Validator Pub Key: ${STRUCTS_VALIDATOR_PUB_KEY}"
-echo "Validator Consensus Address: ${STRUCTS_VALIDATOR_ADDRESS}"
 echo "Validator Count: ${STRUCTS_VALIDATOR_COUNT}"
 
 if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
