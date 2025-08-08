@@ -24,7 +24,7 @@ done
 STRUCTS_VALIDATOR_PUB_KEY_DETAILS=$(cat $STRUCTS_REACTOR_SHARE/reactor_pub_key.json)
 STRUCTS_VALIDATOR_PUB_KEY=$(echo "${STRUCTS_VALIDATOR_PUB_KEY_DETAILS}" | jq -r ".key")
 STRUCTS_VALIDATOR_ADDRESS=$(cat $STRUCTS_REACTOR_SHARE/reactor_address)
-STRUCTS_VALIDATOR_COUNT=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == '${STRUCTS_VALIDATOR_PUB_KEY}')]" | jq length )
+STRUCTS_VALIDATOR_COUNT=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == \"${STRUCTS_VALIDATOR_PUB_KEY}\")]" | jq length )
 
 echo "Validator Pub Key: ${STRUCTS_VALIDATOR_PUB_KEY}"
 echo "Validator Consensus Address: ${STRUCTS_VALIDATOR_ADDRESS}"
@@ -92,7 +92,7 @@ if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
   sleep 10
   echo "Checking for confirmation..."
 
-  STRUCTS_VALIDATOR_COUNT=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == '${STRUCTS_VALIDATOR_PUB_KEY}')]" | jq length )
+  STRUCTS_VALIDATOR_COUNT=$(structsd query staking validators --output json | jq "[.validators[] | select(.consensus_pubkey.value == \"${STRUCTS_VALIDATOR_PUB_KEY}\")]" | jq length )
   if [ "$STRUCTS_VALIDATOR_COUNT" -eq 0 ]; then
     echo "Validator creation seems to have failed"
     cat $STRUCTS_REACTOR_SHARE/reactor.json
