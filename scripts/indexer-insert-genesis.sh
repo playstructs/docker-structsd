@@ -3,7 +3,7 @@
 echo "Inserting Genesis Data into Structs DB"
 
 echo "Deleting old stuff"
-psql ${STRUCTS_INDEXER_PG_CONNECTION} -c "DELETE FROM structs.ledger WHERE action = 'genesis';"
+psql ${STRUCTS_INDEXER_PG_CONNECTION} --set=sslmode=require -c "DELETE FROM structs.ledger WHERE action = 'genesis';"
 
 ALL_GENESIS_BLOB=$(cat $STRUCTS_PATH/config/genesis.json)
 
@@ -28,7 +28,7 @@ do
 
     echo "${QUERY}"
 
-    psql ${STRUCTS_INDEXER_PG_CONNECTION} -c "${QUERY}"
+    psql ${STRUCTS_INDEXER_PG_CONNECTION} --set=sslmode=require -c "${QUERY}"
   done
 done
 
@@ -36,10 +36,10 @@ done
 # Yeah, it's stupid, but it'll work for now. TODO Fix to be generic or fix on new genesis
 QUERY="INSERT INTO structs.ledger(address, counterparty, amount_p, block_height, time, action, direction, denom) VALUES('structs1ul8sd7nk573aw2gyzzwn2ahxqzrq0qg70en5e9','structsvaloper1ul8sd7nk573aw2gyzzwn2ahxqzrq0qg7f8g7t2','300000000', 0, '${ALL_GENESIS_TIME}', 'genesis', 'debit', 'ualpha'); "
 echo "${QUERY}"
-psql ${STRUCTS_INDEXER_PG_CONNECTION} -c "${QUERY}"
+psql ${STRUCTS_INDEXER_PG_CONNECTION} --set=sslmode=require -c "${QUERY}"
 QUERY="INSERT INTO structs.ledger(address, counterparty, amount_p, block_height, time, action, direction, denom) VALUES('structs1ul8sd7nk573aw2gyzzwn2ahxqzrq0qg70en5e9','structsvaloper1ul8sd7nk573aw2gyzzwn2ahxqzrq0qg7f8g7t2','300000000', 0, '${ALL_GENESIS_TIME}', 'genesis', 'credit', 'ualpha.infused'); "
 echo "${QUERY}"
-psql ${STRUCTS_INDEXER_PG_CONNECTION} -c "${QUERY}"
+psql ${STRUCTS_INDEXER_PG_CONNECTION} --set=sslmode=require -c "${QUERY}"
 QUERY="INSERT INTO structs.ledger(counterparty, address, amount_p, block_height, time, action, direction, denom) VALUES('structs1ul8sd7nk573aw2gyzzwn2ahxqzrq0qg70en5e9','structsvaloper1ul8sd7nk573aw2gyzzwn2ahxqzrq0qg7f8g7t2','300000000', 0, '${ALL_GENESIS_TIME}', 'genesis', 'credit', 'ualpha.infused'); "
 echo "${QUERY}"
-psql ${STRUCTS_INDEXER_PG_CONNECTION} -c "${QUERY}"
+psql ${STRUCTS_INDEXER_PG_CONNECTION} --set=sslmode=require -c "${QUERY}"
