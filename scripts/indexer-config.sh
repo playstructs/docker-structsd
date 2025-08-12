@@ -18,4 +18,8 @@ sed -i 's#psql-conn.*.$#psql-conn = "'$STRUCTS_INDEXER_PG_CONNECTION'"#' $STRUCT
 
 echo "Node successfully configured for indexing"
 
+bash /root/scripts/indexer-insert-genesis.sh
+
+echo "Done!"
+
 exit 0

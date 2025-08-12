@@ -30,6 +30,7 @@ RUN apt-get update && \
         git \
         curl \
         golang \
+        postgresql-client \
         jq \
         &&  \
     rm -rf /var/lib/apt/lists/*
