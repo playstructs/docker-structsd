@@ -1,0 +1,50 @@
+-- Reset chain state
+TRUNCATE TABLE cache.queue;
+TRUNCATE TABLE cache.attributes_tmp;
+TRUNCATE TABLE cache.attributes;
+TRUNCATE TABLE cache.events;
+TRUNCATE TABLE cache.tx_results;
+TRUNCATE TABLE cache.blocks;
+
+TRUNCATE TABLE structs.agreement;
+TRUNCATE TABLE structs.allocation;
+TRUNCATE TABLE structs.current_block;
+TRUNCATE TABLE structs.defusion;
+TRUNCATE TABLE structs.fleet;
+TRUNCATE TABLE structs.grid;
+TRUNCATE TABLE structs.guild;
+TRUNCATE TABLE structs.guild_meta;
+TRUNCATE TABLE structs.guid_membership_application;
+TRUNCATE TABLE structs.infusion;
+TRUNCATE TABLE structs.ledger;
+TRUNCATE TABLE structs.permission;
+TRUNCATE TABLE structs.planet;
+TRUNCATE TABLE structs.planet_attribute;
+TRUNCATE TABLE structs.planet_raid;
+TRUNCATE TABLE structs.planet_activity_sequence;
+TRUNCATE TABLE structs.planet_activity;
+TRUNCATE TABLE structs.player;
+TRUNCATE TABLE structs.player_address;
+TRUNCATE TABLE structs.player_address_activity;
+TRUNCATE TABLE structs.player_address_pending;
+TRUNCATE TABLE structs.player_object;
+TRUNCATE TABLE structs.provider;
+TRUNCATE TABLE structs.reactor;
+TRUNCATE TABLE structs.stat_ore;
+TRUNCATE TABLE structs.stat_fuel;
+TRUNCATE TABLE structs.stat_capacity;
+TRUNCATE TABLE structs.stat_load;
+TRUNCATE TABLE structs.stat_structs_load;
+TRUNCATE TABLE structs.stat_power;
+TRUNCATE TABLE structs.stat_connection_count;
+TRUNCATE TABLE structs.stat_connection_capacity;
+TRUNCATE TABLE structs.stat_struct_health;
+TRUNCATE TABLE structs.stat_struct_status;
+TRUNCATE TABLE structs.struct;
+TRUNCATE TABLE structs.struct_attribute;
+TRUNCATE TABLE structs.struct_defender;
+TRUNCATE TABLE structs.struct_type;
+TRUNCATE TABLE structs.substation;
+
+-- TODO Fix after next testnet
+--TRUNCATE TABLE structs.guild_bank;
