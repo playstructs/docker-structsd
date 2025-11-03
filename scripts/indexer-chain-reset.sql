@@ -1,10 +1,10 @@
 -- Reset chain state
 TRUNCATE TABLE cache.queue;
 TRUNCATE TABLE cache.attributes_tmp;
-TRUNCATE TABLE cache.attributes;
-TRUNCATE TABLE cache.events;
-TRUNCATE TABLE cache.tx_results;
-TRUNCATE TABLE cache.blocks;
+TRUNCATE TABLE cache.attributes CASCADE;
+TRUNCATE TABLE cache.events CASCADE;
+TRUNCATE TABLE cache.tx_results CASCADE;
+TRUNCATE TABLE cache.blocks CASCADE;
 
 TRUNCATE TABLE structs.agreement;
 TRUNCATE TABLE structs.allocation;
@@ -14,7 +14,7 @@ TRUNCATE TABLE structs.fleet;
 TRUNCATE TABLE structs.grid;
 TRUNCATE TABLE structs.guild;
 TRUNCATE TABLE structs.guild_meta;
-TRUNCATE TABLE structs.guid_membership_application;
+TRUNCATE TABLE structs.guild_membership_application;
 TRUNCATE TABLE structs.infusion;
 TRUNCATE TABLE structs.ledger;
 TRUNCATE TABLE structs.permission;
@@ -45,6 +45,3 @@ TRUNCATE TABLE structs.struct_attribute;
 TRUNCATE TABLE structs.struct_defender;
 TRUNCATE TABLE structs.struct_type;
 TRUNCATE TABLE structs.substation;
-
--- TODO Fix after next testnet
---TRUNCATE TABLE structs.guild_bank;
