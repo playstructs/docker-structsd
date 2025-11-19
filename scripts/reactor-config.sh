@@ -5,6 +5,15 @@ if ! [ -f $STRUCTS_PATH/status/network ]; then
   exit 1
 fi
 
+if ! [ -f $STRUCTS_PATH/status/network_reactor ]; then
+  echo "Performing initial Reactor configuration"
+
+  echo "Moving Reactor specific configuration files into place"
+  cp /root/config/reactor/* $STRUCTS_PATH/config/
+
+  echo "Node successfully configured for reactor"
+fi
+
 if [ -f $STRUCTS_PATH/status/reactor ]; then
   echo "Reactor already initialized"
   exit 0
@@ -30,9 +39,6 @@ else
 
       cp $STRUCTS_PATH/config/priv_validator_key.json $STRUCTS_REACTOR_BACKUP/priv_validator_key.json
     fi
-
-    echo "Updating config.toml to accept outside connections"
-    sed -i 's#tcp://127.0.0.1:26657#tcp://0.0.0.0:26657#' $STRUCTS_PATH/config/config.toml
 
     touch $STRUCTS_PATH/status/reactor
   fi
