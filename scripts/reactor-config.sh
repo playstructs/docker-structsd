@@ -11,6 +11,7 @@ if ! [ -f $STRUCTS_PATH/status/network_reactor ]; then
   echo "Moving Reactor specific configuration files into place"
   cp /root/config/reactor/* $STRUCTS_PATH/config/
 
+  touch $STRUCTS_PATH/status/network_reactor
   echo "Node successfully configured for reactor"
 fi
 
