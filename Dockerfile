@@ -32,6 +32,7 @@ RUN apt-get update && \
         golang \
         postgresql-client \
         jq \
+        nano \
         &&  \
     rm -rf /var/lib/apt/lists/*
 
