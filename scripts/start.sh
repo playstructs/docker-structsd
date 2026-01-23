@@ -5,4 +5,4 @@ if ! [ -f $STRUCTS_PATH/status/network ]; then
   exit 1
 fi
 
-structsd start
+structsd start ${STRUCTSD_ARGUMENTS}
