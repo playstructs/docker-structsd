@@ -9,8 +9,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTS_PATH="/root/.structs" \
     STRUCTS_REACTOR_SHARE="/root/reactor_share" \
     STRUCTS_REACTOR_BACKUP="/root/reactor_backup" \
-    STRUCTS_CHAIN_ID="structstestnet-106" \
-    STRUCTS_NETWORK_VERSION="106b" \
+    STRUCTS_CHAIN_ID="structstestnet-107" \
+    STRUCTS_NETWORK_VERSION="107b" \
     STRUCTS_MONIKER="UnknownGuild" \
     STRUCTSD_HOST="structsd" \
     STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT="50000000" \
@@ -30,12 +30,18 @@ RUN apt-get update && \
     apt-get install -y \
         git \
         curl \
-        golang \
         postgresql-client \
         jq \
         nano \
         &&  \
     rm -rf /var/lib/apt/lists/*
+
+# Install Go 1.24.1
+RUN curl -LO https://go.dev/dl/go1.24.1.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go1.24.1.linux-amd64.tar.gz && \
+    rm go1.24.1.linux-amd64.tar.gz
+
+ENV PATH="/usr/local/go/bin:/root/go/bin:${PATH}"
 
 # Put this file into place so that the ignite command does not
 # get stuck waiting for input
@@ -46,6 +52,8 @@ COPY config/anon_identity.json /root/.ignite/anon_identity.json
 RUN curl -L -o ignite.tar.gz https://github.com/ignite/cli/releases/download/v28.8.2/ignite_28.8.2_linux_amd64.tar.gz && \
     tar -xzvf ignite.tar.gz && \
     mv ignite /usr/bin/
+
+#RUN curl https://get.ignite.com/cli! | bash
 
 # Expose ports
 EXPOSE 26656
