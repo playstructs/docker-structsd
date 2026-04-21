@@ -48,6 +48,11 @@ ENV PATH="/usr/local/go/bin:/root/go/bin:${PATH}"
 RUN mkdir /root/.ignite
 COPY config/anon_identity.json /root/.ignite/anon_identity.json
 
+
+RUN curl -L -o structsd-0.16.0-linux-amd64.tar.gz https://github.com/playstructs/structsd/releases/download/v0.16.0/structsd-0.16.0-linux-amd64.tar.gz && \
+    tar -zxf structsd-0.16.0-linux-amd64.tar.gz && \
+    mv structsd /usr/bin/structsd
+
 # Install ignite
 RUN curl -L -o ignite.tar.gz https://github.com/ignite/cli/releases/download/v28.8.2/ignite_28.8.2_linux_amd64.tar.gz && \
     tar -xzvf ignite.tar.gz && \
@@ -61,18 +66,20 @@ EXPOSE 26657
 EXPOSE 1317
 
 # Building latest structsd
-RUN git clone https://github.com/playstructs/structsd.git && \
-    cd structsd && \
-    ignite chain build && \
-    cp /root/go/bin/structsd /usr/bin/structsd
+#RUN git clone https://github.com/playstructs/structsd.git && \
+#    cd structsd && \
+#    ignite chain build && \
+#    cp /root/go/bin/structsd /usr/bin/structsd
 
 RUN mkdir $STRUCTS_PATH && \
     mkdir $STRUCTS_REACTOR_SHARE && \
     mkdir $STRUCTS_REACTOR_BACKUP && \
     mkdir /root/scripts && \
-    mkdir /root/config
+    mkdir /root/config && \
+    mkdir /root/snapshots
 
 COPY scripts/ /root/scripts/
+COPY snapshots/ /root/snapshots/
 RUN chmod a+x /root/scripts/*
 
 COPY config/ /root/config/
