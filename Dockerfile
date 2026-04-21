@@ -53,8 +53,6 @@ RUN curl -L -o structsd-0.16.0-linux-amd64.tar.gz https://github.com/playstructs
     tar -zxf structsd-0.16.0-linux-amd64.tar.gz && \
     mv structsd /usr/bin/structsd
 
-RUN /usr/bin/structsd version
-
 # Install ignite
 RUN curl -L -o ignite.tar.gz https://github.com/ignite/cli/releases/download/v28.8.2/ignite_28.8.2_linux_amd64.tar.gz && \
     tar -xzvf ignite.tar.gz && \
