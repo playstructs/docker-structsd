@@ -22,7 +22,18 @@ ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTS_VALIDATOR_MAX_CHANGE_RATE="0.01" \
     STRUCTS_VALIDATOR_MIN_SELF_DELEGATION="1" \
     STRUCTS_INDEXER_PG_CONNECTION="" \
-    STRUCTSD_ARGUMENTS="--log_level info"
+    STRUCTSD_ARGUMENTS="--log_level info" \
+    # Cosmovisor / upgrade settings
+    STRUCTS_GENESIS_BRANCH="111b" \
+    STRUCTS_UPGRADE_NAME="v0.16.0" \
+    STRUCTS_UPGRADE_VERSION="0.16.0" \
+    STRUCTS_UPGRADE_SHA256="14a251a01fe51b76afd0896befdacff43873337a5e12c8673d6a30014a2a385f" \
+    COSMOVISOR_VERSION="v1.7.0" \
+    DAEMON_NAME="structsd" \
+    DAEMON_HOME="/root/.structs" \
+    DAEMON_RESTART_AFTER_UPGRADE="true" \
+    DAEMON_ALLOW_DOWNLOAD_BINARIES="false" \
+    UNSAFE_SKIP_BACKUP="true"
 
 # Install packages
 RUN apt-get update && \
@@ -30,10 +41,11 @@ RUN apt-get update && \
     apt-get install -y \
         git \
         curl \
+        ca-certificates \
         postgresql-client \
         jq \
         nano \
-        &&  \
+        && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Go 1.24.1
@@ -48,41 +60,59 @@ ENV PATH="/usr/local/go/bin:/root/go/bin:${PATH}"
 RUN mkdir /root/.ignite
 COPY config/anon_identity.json /root/.ignite/anon_identity.json
 
-
-RUN curl -L -o structsd-0.16.0-linux-amd64.tar.gz https://github.com/playstructs/structsd/releases/download/v0.16.0/structsd-0.16.0-linux-amd64.tar.gz && \
-    tar -zxf structsd-0.16.0-linux-amd64.tar.gz && \
-    mv structsd /usr/bin/structsd
-
 # Install ignite
 RUN curl -L -o ignite.tar.gz https://github.com/ignite/cli/releases/download/v28.8.2/ignite_28.8.2_linux_amd64.tar.gz && \
     tar -xzvf ignite.tar.gz && \
     mv ignite /usr/bin/
 
-#RUN curl https://get.ignite.com/cli! | bash
+# Install cosmovisor (pinned to a release line that supports cosmos-sdk v0.53.x)
+RUN go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@${COSMOVISOR_VERSION} && \
+    install -m 0755 /root/go/bin/cosmovisor /usr/local/bin/cosmovisor && \
+    cosmovisor version || true
 
 # Expose ports
 EXPOSE 26656
 EXPOSE 26657
 EXPOSE 1317
 
-# Building latest structsd
-#RUN git clone https://github.com/playstructs/structsd.git && \
-#    cd structsd && \
-#    ignite chain build && \
-#    cp /root/go/bin/structsd /usr/bin/structsd
+# Build the genesis (pre-upgrade) binary from the requested branch.
+# Cosmovisor will run this until height 385730 when x/upgrade signals "v0.16.0".
+RUN mkdir -p /opt/structs/cosmovisor/genesis/bin && \
+    git clone https://github.com/playstructs/structsd.git -b ${STRUCTS_GENESIS_BRANCH} && \
+    cd structsd && \
+    ignite chain build && \
+    install -m 0755 /root/go/bin/structsd /opt/structs/cosmovisor/genesis/bin/structsd && \
+    /opt/structs/cosmovisor/genesis/bin/structsd version || true
 
-RUN mkdir $STRUCTS_PATH && \
-    mkdir $STRUCTS_REACTOR_SHARE && \
-    mkdir $STRUCTS_REACTOR_BACKUP && \
-    mkdir /root/scripts && \
-    mkdir /root/config && \
-    mkdir /root/snapshots
+# Stage the official upgrade binary (v0.16.0). We bake the same artifact
+# referenced in the on-chain governance proposal so the in-container binary
+# is byte-identical to what the rest of the network ran.
+RUN mkdir -p /opt/structs/cosmovisor/upgrades/${STRUCTS_UPGRADE_NAME}/bin /tmp/upgrade && \
+    curl -fsSL -o /tmp/upgrade/structsd.tar.gz \
+        https://github.com/playstructs/structsd/releases/download/${STRUCTS_UPGRADE_NAME}/structsd-${STRUCTS_UPGRADE_VERSION}-linux-amd64.tar.gz && \
+    echo "${STRUCTS_UPGRADE_SHA256}  /tmp/upgrade/structsd.tar.gz" | sha256sum -c - && \
+    tar -xzf /tmp/upgrade/structsd.tar.gz -C /tmp/upgrade && \
+    UPGRADE_BIN="$(find /tmp/upgrade -type f -name structsd ! -path '*.tar.gz' | head -n1)" && \
+    test -n "${UPGRADE_BIN}" && \
+    install -m 0755 "${UPGRADE_BIN}" /opt/structs/cosmovisor/upgrades/${STRUCTS_UPGRADE_NAME}/bin/structsd && \
+    /opt/structs/cosmovisor/upgrades/${STRUCTS_UPGRADE_NAME}/bin/structsd version || true && \
+    rm -rf /tmp/upgrade
+
+# Keep a stable `structsd` on PATH for utility scripts (reactor-create.sh,
+# indexer-insert-genesis.sh, ad-hoc CLI calls). It points at the genesis
+# binary; cosmovisor manages the live daemon separately.
+RUN ln -sf /opt/structs/cosmovisor/genesis/bin/structsd /usr/bin/structsd
+
+RUN mkdir -p $STRUCTS_PATH && \
+    mkdir -p $STRUCTS_REACTOR_SHARE && \
+    mkdir -p $STRUCTS_REACTOR_BACKUP && \
+    mkdir -p /root/scripts && \
+    mkdir -p /root/config
 
 COPY scripts/ /root/scripts/
-COPY snapshots/ /root/snapshots/
 RUN chmod a+x /root/scripts/*
 
 COPY config/ /root/config/
 
-# Run Structs
+# Run Structs (cosmovisor handles the v0.16.0 swap at height 385730)
 CMD [ "bash", "/root/scripts/start.sh" ]
