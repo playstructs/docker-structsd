@@ -29,10 +29,10 @@ if [ "$STRUCTS_PREVIOUS_CHAIN_ID" != "$STRUCTS_CHAIN_ID" ]; then
 
   # TODO Fix this sledge hammer
   # Just get the system working again.
-  echo "Snapshot for 0.16.0 loading"
-  structsd snapshots load /root/snapshots/392500-3.tar.gz --home $STRUCTS_PATH
-  echo "Snapshot for 0.16.0 restoring"
-  structsd snapshots restore 392500 3 --home $STRUCTS_PATH
+  #echo "Snapshot for 0.16.0 loading"
+  #structsd snapshots load /root/snapshots/392500-3.tar.gz --home $STRUCTS_PATH
+  #echo "Snapshot for 0.16.0 restoring"
+  #structsd snapshots restore 392500 3 --home $STRUCTS_PATH
 
   echo $STRUCTS_CHAIN_ID > $STRUCTS_PATH/status/network
 else
