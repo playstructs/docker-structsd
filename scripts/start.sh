@@ -24,6 +24,11 @@ UPGRADE_DST_DIR="$STRUCTS_PATH/cosmovisor/upgrades/${STRUCTS_UPGRADE_NAME}/bin"
 echo "Staging cosmovisor binaries into $STRUCTS_PATH/cosmovisor"
 mkdir -p "$GENESIS_DST_DIR" "$UPGRADE_DST_DIR"
 
+# Cosmovisor v1.7+ refuses to start unless $DAEMON_HOME/data already exists.
+# The daemon itself populates this directory on first block; we just need it
+# to exist (network-config.sh deletes it on chain-id changes).
+mkdir -p "$STRUCTS_PATH/data"
+
 # Idempotent install: keep image-baked binaries authoritative so an image
 # bump propagates into existing volumes on next start.
 install -m 0755 "$GENESIS_SRC" "$GENESIS_DST_DIR/structsd"
