@@ -1,11 +1,22 @@
 #!/usr/bin/env bash
 
+STRUCTS_MIN_GAS_PRICES="${STRUCTS_MIN_GAS_PRICES:-0ualpha}"
 
 echo "Checking Chain Configuration"
 if [[ ! -d $STRUCTS_PATH/config ]]; then
     echo "No config found, setting defaults"
     mkdir -p $STRUCTS_PATH/config
     cp /root/config/default/* $STRUCTS_PATH/config/
+fi
+
+# structsd init leaves minimum-gas-prices empty; newer SDK versions refuse to start.
+APP_TOML="$STRUCTS_PATH/config/app.toml"
+if [ -f "$APP_TOML" ]; then
+  CURRENT_MIN_GAS=$(grep -E '^minimum-gas-prices[[:space:]]*=' "$APP_TOML" | sed -E 's/^minimum-gas-prices[[:space:]]*=[[:space:]]*"([^"]*)".*/\1/')
+  if [ -z "$CURRENT_MIN_GAS" ]; then
+    echo "Setting minimum-gas-prices to ${STRUCTS_MIN_GAS_PRICES} in app.toml"
+    sed -i 's/^minimum-gas-prices = .*/minimum-gas-prices = "'"${STRUCTS_MIN_GAS_PRICES}"'"/' "$APP_TOML"
+  fi
 fi
 
 mkdir -p $STRUCTS_PATH/status

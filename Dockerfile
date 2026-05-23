@@ -22,7 +22,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTS_VALIDATOR_MAX_CHANGE_RATE="0.01" \
     STRUCTS_VALIDATOR_MIN_SELF_DELEGATION="1" \
     STRUCTS_INDEXER_PG_CONNECTION="" \
-    STRUCTSD_ARGUMENTS="--log_level info" \
+    STRUCTSD_ARGUMENTS="--log_level info --minimum-gas-prices 0ualpha" \
     # Cosmovisor / upgrade settings
     STRUCTS_GENESIS_BRANCH="111b" \
     STRUCTS_UPGRADE_NAME="v0.16.0" \
