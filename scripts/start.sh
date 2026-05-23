@@ -6,6 +6,10 @@ if ! [ -f "$STRUCTS_PATH/status/network" ]; then
   exit 1
 fi
 
+# Enforce docker bind addresses and app.toml defaults on every start (structsd init
+# may have created config/ before network-config could copy image templates).
+bash /root/scripts/apply-docker-config.sh
+
 # Defaults (also set in the Dockerfile ENV; re-asserted here so this script
 # is safe to run standalone or with overridden envs).
 : "${DAEMON_NAME:=structsd}"
