@@ -18,6 +18,8 @@ fi
 : "${UNSAFE_SKIP_BACKUP:=true}"
 
 KNOWN_UPGRADES=(v0.16.0 v0.17.0)
+# plan-name:block-height — used to pick the correct binary when chain data is past an upgrade.
+UPGRADE_HEIGHTS=(385730:v0.16.0 867678:v0.17.0)
 
 GENESIS_SRC="/opt/structs/cosmovisor/genesis/bin/structsd"
 GENESIS_DST_DIR="$STRUCTS_PATH/cosmovisor/genesis/bin"
@@ -57,21 +59,71 @@ for upgrade_name in "${KNOWN_UPGRADES[@]}"; do
   fi
 done
 
-# Migration safety: bootstrap cosmovisor/current only when absent (e.g. volume
-# copied from a manually-upgraded node, or pre-cosmovisor adoption).
+upgrade_for_height() {
+  local height="$1"
+  local picked=""
+  local entry height_at name
+  for entry in "${UPGRADE_HEIGHTS[@]}"; do
+    height_at="${entry%%:*}"
+    name="${entry##*:}"
+    if [ "$height" -ge "$height_at" ]; then
+      picked="$name"
+    fi
+  done
+  echo "$picked"
+}
+
+newer_upgrade() {
+  local a="$1"
+  local b="$2"
+  if [ -z "$a" ]; then echo "$b"; return; fi
+  if [ -z "$b" ]; then echo "$a"; return; fi
+  local idx_a=-1 idx_b=-1 i=0 name
+  for name in "${KNOWN_UPGRADES[@]}"; do
+    if [ "$name" = "$a" ]; then idx_a=$i; fi
+    if [ "$name" = "$b" ]; then idx_b=$i; fi
+    i=$((i + 1))
+  done
+  if [ "$idx_a" -ge "$idx_b" ]; then echo "$a"; else echo "$b"; fi
+}
+
+ensure_current_points_to() {
+  local upgrade_name="$1"
+  local expected="upgrades/${upgrade_name}"
+  local current_target=""
+
+  if [ -L "$CURRENT_LINK" ]; then
+    current_target="$(readlink "$CURRENT_LINK")"
+  fi
+
+  if [ "$current_target" != "$expected" ] && [ -x "$STRUCTS_PATH/cosmovisor/${expected}/bin/structsd" ]; then
+    echo "Pointing cosmovisor/current -> ${expected} (was: ${current_target:-none})"
+    ln -sfn "${expected}" "$CURRENT_LINK"
+  fi
+}
+
+# Ensure cosmovisor/current matches chain state. Too-conservative bootstrap was
+# leaving current on genesis after a failed replay past height 385730, causing
+# a restart loop even once data/upgrade-info.json recorded the upgrade.
 CURRENT_INFO="$CURRENT_LINK/upgrade-info.json"
-detected_name=""
+active_upgrade=""
 if [ -f "$CURRENT_INFO" ]; then
-  detected_name="$(jq -r '.name // empty' "$CURRENT_INFO")"
+  active_upgrade="$(jq -r '.name // empty' "$CURRENT_INFO")"
 elif [ -f "$UPGRADE_INFO" ]; then
-  detected_name="$(jq -r '.name // empty' "$UPGRADE_INFO")"
+  active_upgrade="$(jq -r '.name // empty' "$UPGRADE_INFO")"
 fi
 
-if [ -n "$detected_name" ] && [ ! -L "$CURRENT_LINK" ]; then
-  if [ -f "$STRUCTS_PATH/cosmovisor/upgrades/${detected_name}/bin/structsd" ]; then
-    echo "Bootstrapping cosmovisor/current -> upgrades/${detected_name}"
-    ln -sfn "upgrades/${detected_name}" "$CURRENT_LINK"
+VALIDATOR_STATE="$STRUCTS_PATH/data/priv_validator_state.json"
+if [ -f "$VALIDATOR_STATE" ]; then
+  chain_height="$(jq -r '.height // 0' "$VALIDATOR_STATE")"
+  height_upgrade="$(upgrade_for_height "$chain_height")"
+  if [ -n "$height_upgrade" ]; then
+    active_upgrade="$(newer_upgrade "$active_upgrade" "$height_upgrade")"
   fi
+fi
+
+if [ -n "$active_upgrade" ]; then
+  ensure_current_points_to "$active_upgrade"
 fi
 
 # Point utility scripts at the active binary (fallback to genesis pre-upgrade).
