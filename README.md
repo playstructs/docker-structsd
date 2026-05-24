@@ -39,12 +39,15 @@ docker run -it --rm -p 26656:26656 --name=structsd structs/structsd:latest
 
 This image runs `structsd` under [cosmovisor](https://docs.cosmos.network/main/build/tooling/cosmovisor) so that on-chain `x/upgrade` software-upgrade plans swap the binary automatically without operator intervention and without restarting the container.
 
-Two binaries are baked into the image:
+Three binaries are baked into the image:
 
 - **Genesis binary** — built from the `structsd` `111b` branch with Ignite. Cosmovisor runs this from block 0 until the first upgrade fires.
-- **Upgrade binary `v0.16.0`** — the official `structsd-0.16.0-linux-amd64.tar.gz` from the [v0.16.0 GitHub release](https://github.com/playstructs/structsd/releases/tag/v0.16.0), verified against the sha256 from the on-chain proposal. Cosmovisor switches to this when the chain announces the `v0.16.0` plan at height **385730**.
+- **Upgrade binary `v0.16.0`** — the official `structsd-0.16.0-linux-amd64.tar.gz` from the [v0.16.0 GitHub release](https://github.com/playstructs/structsd/releases/tag/v0.16.0), verified against the sha256 from the on-chain proposal. Cosmovisor switches to this at height **385730**.
+- **Upgrade binary `v0.17.0`** — the official `structsd-0.17.0-linux-amd64.tar.gz` from the [v0.17.0 GitHub release](https://github.com/playstructs/structsd/releases/tag/v0.17.0), verified against the sha256 from governance proposal 2. Cosmovisor switches to this at height **867678**.
 
-At container start, `scripts/start.sh` syncs both binaries into `$STRUCTS_PATH/cosmovisor/{genesis,upgrades/v0.16.0}/bin/structsd` (idempotent), then `exec`s `cosmovisor run start --home $STRUCTS_PATH`. Because cosmovisor is PID 1 and `DAEMON_RESTART_AFTER_UPGRADE=true`, the upgrade swap is handled in-place: the daemon child exits, cosmovisor updates the `cosmovisor/current` symlink, and starts the new binary as a fresh child. The container itself stays running.
+At container start, `scripts/start.sh` syncs all binaries into `$STRUCTS_PATH/cosmovisor/` (idempotent), bootstraps `cosmovisor/current` when needed, registers batch upgrades for catch-up syncs, then `exec`s `cosmovisor run start --home $STRUCTS_PATH`. Because cosmovisor is PID 1 and `DAEMON_RESTART_AFTER_UPGRADE=true`, each upgrade swap is handled in-place: the daemon child exits, cosmovisor updates the `cosmovisor/current` symlink, and starts the new binary as a fresh child. The container itself stays running.
+
+Roll out a new image **before** height 867678. Consider publishing a versioned tag (e.g. `structs/structsd:v0.17.0`) alongside `:latest` so operators can pin the exact image containing the upgrade binary.
 
 ## Cosmovisor environment knobs
 
@@ -54,18 +57,21 @@ At container start, `scripts/start.sh` syncs both binaries into `$STRUCTS_PATH/c
 | `DAEMON_HOME` | `/root/.structs` | Same as `STRUCTS_PATH`; cosmovisor looks for `cosmovisor/` under this path. |
 | `DAEMON_RESTART_AFTER_UPGRADE` | `true` | Required so the container does not exit after the upgrade swap. |
 | `DAEMON_ALLOW_DOWNLOAD_BINARIES` | `false` | Image is hermetic; the upgrade binary is baked in. |
-| `UNSAFE_SKIP_BACKUP` | `true` | Skips tarballing `data/` before upgrade. Set to `false` for an extra safety net (slow on a long-lived chain). |
-| `STRUCTS_UPGRADE_NAME` | `v0.16.0` | Must match the on-chain plan name exactly (case-sensitive). |
+| `UNSAFE_SKIP_BACKUP` | `true` | Skips tarballing `data/` before upgrade. Set to `false` for an extra safety net (slow on a long-lived chain). Take a manual volume snapshot before upgrade heights regardless. |
 
 ## Adding a future upgrade
 
-When the next on-chain upgrade lands (e.g. `v0.17.0`), bake a third binary into the image alongside the existing two:
+When the next on-chain upgrade lands (e.g. `v0.18.0`):
 
-1. Add a `RUN` block in the `Dockerfile` that fetches the release tarball, verifies its sha256 from the governance proposal, and installs it to `/opt/structs/cosmovisor/upgrades/v0.17.0/bin/structsd`.
-2. Add a corresponding `install -m 0755 ...` line in `scripts/start.sh` so the binary is staged into the volume on next start.
-3. Rebuild and roll. Cosmovisor will pick the right binary based on the active plan in chain state.
+1. Add one line to the upgrade `RUN` in the `Dockerfile`, using the sha256 from the governance proposal:
+   ```
+   /root/scripts/install-upgrade-binary.sh v0.18.0 0.18.0 <sha256>
+   ```
+2. Add the plan name to the `KNOWN_UPGRADES` array in `scripts/start.sh`.
+3. Add the plan name, height, and binary path to the `cosmovisor add-batch-upgrade --upgrade-list` call in `scripts/start.sh` (format: `name:path/to/binary:height`).
+4. Rebuild and roll before the upgrade height. Cosmovisor picks the right binary based on chain state.
 
-The `v0.16.0` swap continues to work for fresh syncs because the genesis binary is still `111b`.
+The genesis binary stays `111b` so fresh syncs from block 0 still work through all historical upgrade heights.
 
 # Learn more
 

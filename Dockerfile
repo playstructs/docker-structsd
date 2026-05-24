@@ -25,9 +25,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTSD_ARGUMENTS="--log_level info --minimum-gas-prices 0ualpha" \
     # Cosmovisor / upgrade settings
     STRUCTS_GENESIS_BRANCH="111b" \
-    STRUCTS_UPGRADE_NAME="v0.16.0" \
-    STRUCTS_UPGRADE_VERSION="0.16.0" \
-    STRUCTS_UPGRADE_SHA256="14a251a01fe51b76afd0896befdacff43873337a5e12c8673d6a30014a2a385f" \
     COSMOVISOR_VERSION="v1.7.0" \
     DAEMON_NAME="structsd" \
     DAEMON_HOME="/root/.structs" \
@@ -76,27 +73,13 @@ EXPOSE 26657
 EXPOSE 1317
 
 # Build the genesis (pre-upgrade) binary from the requested branch.
-# Cosmovisor will run this until height 385730 when x/upgrade signals "v0.16.0".
+# Cosmovisor runs this until height 385730 (v0.16.0), then 867678 (v0.17.0).
 RUN mkdir -p /opt/structs/cosmovisor/genesis/bin && \
     git clone https://github.com/playstructs/structsd.git -b ${STRUCTS_GENESIS_BRANCH} && \
     cd structsd && \
     ignite chain build && \
     install -m 0755 /root/go/bin/structsd /opt/structs/cosmovisor/genesis/bin/structsd && \
     /opt/structs/cosmovisor/genesis/bin/structsd version || true
-
-# Stage the official upgrade binary (v0.16.0). We bake the same artifact
-# referenced in the on-chain governance proposal so the in-container binary
-# is byte-identical to what the rest of the network ran.
-RUN mkdir -p /opt/structs/cosmovisor/upgrades/${STRUCTS_UPGRADE_NAME}/bin /tmp/upgrade && \
-    curl -fsSL -o /tmp/upgrade/structsd.tar.gz \
-        https://github.com/playstructs/structsd/releases/download/${STRUCTS_UPGRADE_NAME}/structsd-${STRUCTS_UPGRADE_VERSION}-linux-amd64.tar.gz && \
-    echo "${STRUCTS_UPGRADE_SHA256}  /tmp/upgrade/structsd.tar.gz" | sha256sum -c - && \
-    tar -xzf /tmp/upgrade/structsd.tar.gz -C /tmp/upgrade && \
-    UPGRADE_BIN="$(find /tmp/upgrade -type f -name structsd ! -path '*.tar.gz' | head -n1)" && \
-    test -n "${UPGRADE_BIN}" && \
-    install -m 0755 "${UPGRADE_BIN}" /opt/structs/cosmovisor/upgrades/${STRUCTS_UPGRADE_NAME}/bin/structsd && \
-    /opt/structs/cosmovisor/upgrades/${STRUCTS_UPGRADE_NAME}/bin/structsd version || true && \
-    rm -rf /tmp/upgrade
 
 # Keep a stable `structsd` on PATH for utility scripts (reactor-create.sh,
 # indexer-insert-genesis.sh, ad-hoc CLI calls). It points at the genesis
@@ -112,7 +95,11 @@ RUN mkdir -p $STRUCTS_PATH && \
 COPY scripts/ /root/scripts/
 RUN chmod a+x /root/scripts/*
 
+# Stage official upgrade binaries. SHA256s match the on-chain governance proposals.
+RUN /root/scripts/install-upgrade-binary.sh v0.16.0 0.16.0 14a251a01fe51b76afd0896befdacff43873337a5e12c8673d6a30014a2a385f && \
+    /root/scripts/install-upgrade-binary.sh v0.17.0 0.17.0 09208557818f4c4a646435472f35f33390fa91c807f4678f853cc804809d91a7
+
 COPY config/ /root/config/
 
-# Run Structs (cosmovisor handles the v0.16.0 swap at height 385730)
+# Run Structs (cosmovisor handles upgrades at heights 385730 and 867678)
 CMD [ "bash", "/root/scripts/start.sh" ]
