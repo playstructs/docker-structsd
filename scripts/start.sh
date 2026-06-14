@@ -19,8 +19,13 @@ fi
 
 # Single source of truth for known upgrades. Adding a new upgrade is a one-line
 # edit to upgrades.conf.sh plus an install-upgrade-binary.sh line in Dockerfile.
+CONF_FILE="/root/scripts/upgrades.conf.sh"
+if [ ! -f "$CONF_FILE" ]; then
+  echo "FATAL: $CONF_FILE missing — image is stale or built without the upgrades config. Rebuild the image." >&2
+  exit 1
+fi
 # shellcheck disable=SC1091
-source /root/scripts/upgrades.conf.sh
+source "$CONF_FILE"
 
 # Derived arrays.
 KNOWN_UPGRADES=()
