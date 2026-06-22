@@ -70,13 +70,21 @@ The repo has one source of truth for known upgrades — [`scripts/upgrades.conf.
    UPGRADES=(
      "v0.16.0:385730"
      "v0.17.0:867678"
-     "v0.18.0:NEW_HEIGHT"
+     "v0.18.0:1173255"
+     "v0.19.0:NEW_HEIGHT"
    )
    ```
 2. Add one line to the upgrade `RUN` in the [`Dockerfile`](Dockerfile), using the sha256 from the governance proposal:
    ```
-   /root/scripts/install-upgrade-binary.sh v0.18.0 0.18.0 <sha256>
+   # Normal case (release tag == on-chain plan name):
+   /root/scripts/install-upgrade-binary.sh v0.20.0 0.20.0 <sha256>
+
+   # When the plan-name binary ships under a different release tag (e.g. a hotfix),
+   # pass the release tag as an optional 4th arg. Here the v0.19.0 plan binary
+   # lives in the v0.19.1 GitHub release:
+   /root/scripts/install-upgrade-binary.sh v0.19.0 0.19.1 <sha256> v0.19.1
    ```
+   The first arg is the on-chain plan name (and the `cosmovisor/upgrades/<dir>`), the second is the version in the release filename, the third is the tarball sha256, and the optional fourth overrides the GitHub release tag (defaults to the plan name).
 3. Rebuild and roll before the upgrade height. Cosmovisor picks the right binary based on chain state.
 
 `scripts/start.sh` and `scripts/reconcile-cosmovisor-current.sh` both source `upgrades.conf.sh`, so the batch-upgrade list, pre-flight checks, and drift correction all derive automatically. **No compose changes are needed for chain upgrades** — operators never touch their compose files for this.

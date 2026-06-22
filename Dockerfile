@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     STRUCTS_REACTOR_SHARE="/root/reactor_share" \
     STRUCTS_REACTOR_BACKUP="/root/reactor_backup" \
     STRUCTS_CHAIN_ID="structstestnet-111" \
-    STRUCTS_NETWORK_VERSION="113b" \
+    STRUCTS_NETWORK_VERSION="115b" \
     STRUCTS_MONIKER="UnknownGuild" \
     STRUCTSD_HOST="structsd" \
     STRUCTS_VALIDATOR_INITIAL_STAKING_AMOUNT="50000000" \
@@ -73,7 +73,7 @@ EXPOSE 26657
 EXPOSE 1317
 
 # Build the genesis (pre-upgrade) binary from the requested branch.
-# Cosmovisor runs this until height 385730 (v0.16.0), then 867678 (v0.17.0), then 1173255 (v0.18.0).
+# Cosmovisor runs this until height 385730 (v0.16.0), then 867678 (v0.17.0), then 1173255 (v0.18.0), then 1335904 (v0.19.0).
 RUN mkdir -p /opt/structs/cosmovisor/genesis/bin && \
     git clone https://github.com/playstructs/structsd.git -b ${STRUCTS_GENESIS_BRANCH} && \
     cd structsd && \
@@ -98,9 +98,10 @@ RUN chmod a+x /root/scripts/*
 # Stage official upgrade binaries. SHA256s match the on-chain governance proposals.
 RUN /root/scripts/install-upgrade-binary.sh v0.16.0 0.16.0 14a251a01fe51b76afd0896befdacff43873337a5e12c8673d6a30014a2a385f && \
     /root/scripts/install-upgrade-binary.sh v0.17.0 0.17.0 09208557818f4c4a646435472f35f33390fa91c807f4678f853cc804809d91a7 && \
-    /root/scripts/install-upgrade-binary.sh v0.18.0 0.18.0 71192f8046f7418dcf840491a8e2d4e30968aa979c0fb2b314095686d412623b
+    /root/scripts/install-upgrade-binary.sh v0.18.0 0.18.0 71192f8046f7418dcf840491a8e2d4e30968aa979c0fb2b314095686d412623b && \
+    /root/scripts/install-upgrade-binary.sh v0.19.0 0.19.1 d76f06cbedeb1201f69206551e37789672160d7f4db70cacb5dcc32732a07b31 v0.19.1
 
 COPY config/ /root/config/
 
-# Run Structs (cosmovisor handles upgrades at heights 385730, 867678, and 1173255)
+# Run Structs (cosmovisor handles upgrades at heights 385730, 867678, 1173255, and 1335904)
 CMD [ "bash", "/root/scripts/start.sh" ]
