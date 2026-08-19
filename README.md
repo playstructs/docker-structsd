@@ -39,17 +39,23 @@ docker run -it --rm -p 26656:26656 --name=structsd structs/structsd:latest
 
 This image runs `structsd` under [cosmovisor](https://docs.cosmos.network/main/build/tooling/cosmovisor) so that on-chain `x/upgrade` software-upgrade plans swap the binary automatically without operator intervention and without restarting the container.
 
-Three binaries are baked into the image:
+The genesis binary plus every known upgrade binary are baked into the image:
 
 - **Genesis binary** — built from the `structsd` `111b` branch with Ignite. Cosmovisor runs this from block 0 until the first upgrade fires.
-- **Upgrade binary `v0.16.0`** — the official `structsd-0.16.0-linux-amd64.tar.gz` from the [v0.16.0 GitHub release](https://github.com/playstructs/structsd/releases/tag/v0.16.0), verified against the sha256 from the on-chain proposal. Cosmovisor switches to this at height **385730**.
-- **Upgrade binary `v0.17.0`** — the official `structsd-0.17.0-linux-amd64.tar.gz` from the [v0.17.0 GitHub release](https://github.com/playstructs/structsd/releases/tag/v0.17.0), verified against the sha256 from governance proposal 2. Cosmovisor switches to this at height **867678**.
+- **Upgrade binary `v0.16.0`** — official linux/amd64 tarball from the [v0.16.0 GitHub release](https://github.com/playstructs/structsd/releases/tag/v0.16.0). Switches at height **385730**.
+- **Upgrade binary `v0.17.0`** — [v0.17.0](https://github.com/playstructs/structsd/releases/tag/v0.17.0). Height **867678**.
+- **Upgrade binary `v0.18.0`** — [v0.18.0](https://github.com/playstructs/structsd/releases/tag/v0.18.0). Height **1173255**.
+- **Upgrade binary `v0.19.0`** — plan `v0.19.0` ships the `0.19.1` binary from the [v0.19.1 GitHub release](https://github.com/playstructs/structsd/releases/tag/v0.19.1). Height **1335904**.
+- **Upgrade binary `v0.20.0`** — [v0.20.0](https://github.com/playstructs/structsd/releases/tag/v0.20.0). Height **1732284**.
+- **Upgrade binary `v0.21.0`** — [v0.21.0](https://github.com/playstructs/structsd/releases/tag/v0.21.0). Height **2283000**.
+
+Each upgrade tarball is verified at build time against the sha256 from the matching on-chain governance proposal (or the official release `checksums.txt` when that is the source). The runtime list of plan names and heights lives in [`scripts/upgrades.conf.sh`](scripts/upgrades.conf.sh).
 
 At container start, `scripts/start.sh` syncs all binaries into `$STRUCTS_PATH/cosmovisor/` (idempotent), runs `scripts/reconcile-cosmovisor-current.sh` to fix any drift in the `cosmovisor/current` symlink, registers batch upgrades for catch-up syncs, then `exec`s `cosmovisor run start --home $STRUCTS_PATH`. Because cosmovisor is PID 1 and `DAEMON_RESTART_AFTER_UPGRADE=true`, each upgrade swap is handled in-place: the daemon child exits, cosmovisor updates `cosmovisor/current`, and starts the new binary as a fresh child. The container itself stays running.
 
 The reconciler treats `data/upgrade-info.json` (written by `x/upgrade` at the upgrade height) as the authoritative signal for which binary should be running. This closes the rare window where a Docker restart during an in-process upgrade swap would otherwise leave `cosmovisor/current` pointing at the old binary and trigger a permanent restart loop.
 
-Roll out a new image **before** the next on-chain upgrade height. Consider publishing a versioned tag (e.g. `structs/structsd:v0.17.0`) alongside `:latest` so operators can pin the exact image containing the upgrade binary.
+Roll out a new image **before** the next on-chain upgrade height. Consider publishing a versioned tag (e.g. `structs/structsd:v0.21.0`) alongside `:latest` so operators can pin the exact image containing the upgrade binary.
 
 ## Cosmovisor environment knobs
 
@@ -71,13 +77,16 @@ The repo has one source of truth for known upgrades — [`scripts/upgrades.conf.
      "v0.16.0:385730"
      "v0.17.0:867678"
      "v0.18.0:1173255"
-     "v0.19.0:NEW_HEIGHT"
+     "v0.19.0:1335904"
+     "v0.20.0:1732284"
+     "v0.21.0:2283000"
+     "v0.22.0:NEW_HEIGHT"
    )
    ```
 2. Add one line to the upgrade `RUN` in the [`Dockerfile`](Dockerfile), using the sha256 from the governance proposal:
    ```
    # Normal case (release tag == on-chain plan name):
-   /root/scripts/install-upgrade-binary.sh v0.20.0 0.20.0 <sha256>
+   /root/scripts/install-upgrade-binary.sh v0.22.0 0.22.0 <sha256>
 
    # When the plan-name binary ships under a different release tag (e.g. a hotfix),
    # pass the release tag as an optional 4th arg. Here the v0.19.0 plan binary
